@@ -45,7 +45,8 @@ function manifest(browser: 'chrome' | 'firefox') {
     description: 'Yu-Gi-Oh! deck prices on the deck builder you use, and one click to TCGplayer Mass Entry.',
     icons: { 16: 'icons/16.png', 32: 'icons/32.png', 48: 'icons/48.png', 128: 'icons/128.png' },
     action: { default_popup: 'popup.html', default_icon: { 16: 'icons/16.png', 32: 'icons/32.png' } },
-    permissions: ['storage'],
+    // Firefox also reads the applied theme's colors (theme.getCurrent) so the panel and popup can match it.
+    permissions: browser === 'firefox' ? ['storage', 'theme'] : ['storage'],
     // Prices are Chaos Catalog's published file (DESIGN.md §4).
     host_permissions: ['https://brandongeren.github.io/*'],
     background: browser === 'chrome' ? { service_worker: 'background.js' } : { scripts: ['background.js'] },

@@ -49,6 +49,8 @@ Then click the Cost Down icon in the toolbar.
 - **Order list:** **Add to order list** on any deck, then the **Order list** tab sends every deck at once (owned copies
   count once for the whole order).
 
+Cost Down follows your browser's light / dark setting, and in Firefox the colors of the theme you've applied.
+
 ## Prices
 
 TCGplayer market prices (USD), the cheapest printing of each card, from [TCGCSV](https://tcgcsv.com) by way of

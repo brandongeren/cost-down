@@ -34,3 +34,21 @@ chrome.runtime.onMessage.addListener((msg: { type?: string }, _sender, sendRespo
 
 chrome.runtime.onInstalled.addListener(() => void ensure().catch(() => {}))
 chrome.runtime.onStartup.addListener(() => void ensure().catch(() => {}))
+
+// Firefox only: the applied theme's colors, so Cost Down's panel and popup can match it (Chrome has no theme API;
+// there it follows light/dark only). Stored as `theme` in storage.local; null when the theme sets no colors.
+const ffTheme = (globalThis as unknown as { browser?: { theme?: { getCurrent(): Promise<{ colors?: Record<string, unknown> | null }>; onUpdated: { addListener(f: () => void): void } } } }).browser?.theme
+async function storeTheme() {
+  if (!ffTheme) return
+  const c = (await ffTheme.getCurrent()).colors ?? {}
+  const color = (k: string) => (typeof c[k] === 'string' ? (c[k] as string) : Array.isArray(c[k]) ? `rgb(${(c[k] as number[]).join(',')})` : null)
+  const bg = color('popup') ?? color('frame')
+  const text = color('popup_text') ?? color('tab_background_text') ?? color('toolbar_text')
+  await chrome.storage.local.set({
+    theme: bg && text ? { bg, text, border: color('popup_border'), surface: color('toolbar_field') ?? color('toolbar') } : null,
+  })
+}
+if (ffTheme) {
+  void storeTheme()
+  ffTheme.onUpdated.addListener(() => void storeTheme())
+}

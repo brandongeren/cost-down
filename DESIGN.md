@@ -199,6 +199,15 @@ big combined order.
 - Owned counts: **− n + All** per line; All sets the count to every copy of that card in the loaded deck (all
   sections). The card list keeps its scroll position when the panel redraws (it used to jump to the top on +/−).
 
+### Light / dark and browser themes (2026-10-30, user request)
+
+- The panel, order list and popup use CSS variables: light by default, dark under `prefers-color-scheme: dark`
+  (Chrome: the system or Chrome's Appearance setting; Firefox: its website appearance setting).
+- Firefox themes: the background script reads `browser.theme.getCurrent()` (Firefox manifest adds the `theme`
+  permission) and stores `theme` {bg, text, border, surface} from the theme's popup / toolbar colors; every Cost Down
+  shadow root and the popup apply them over light/dark, and follow `theme.onUpdated`. Chrome has no theme API for
+  extensions, so Chrome follows light/dark only.
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -255,6 +264,9 @@ big combined order.
 - 2026-10-30: Duelingbook deck link page (behind Cloudflare's human check, so cards were put on screen with the
   app's functions): priced ($1.79), × then the corner TCGplayer badge reopened the panel; nothing shows on the front
   page or before cards load. Neuron: scrolled list stayed at 600 px after +; All on Ash Blossom set owned to 3.
+
+- 2026-10-30: dark mode checked in Chromium (panel and popup), and stored theme colors restyled both live. A real
+  Firefox theme isn't tested yet (no Firefox automation here).
 
 ## 8. Still open
 

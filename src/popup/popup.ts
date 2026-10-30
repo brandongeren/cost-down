@@ -15,6 +15,15 @@ for (const b of document.querySelectorAll<HTMLButtonElement>('nav button'))
     for (const s of document.querySelectorAll('section')) s.hidden = s.id !== b.dataset.tab
   })
 
+// The popup page itself follows the Firefox theme too (the panels inside get it through shadow()).
+void chrome.storage.local.get('theme').then(({ theme }) => popupTheme(theme as Record<string, string | null> | null | undefined))
+chrome.storage.onChanged.addListener((c, area) => area === 'local' && 'theme' in c && popupTheme(c.theme.newValue as Record<string, string | null> | null))
+function popupTheme(t: Record<string, string | null> | null | undefined) {
+  const r = document.documentElement.style
+  for (const [v, k] of [['--p-bg', 'bg'], ['--p-surface', 'bg'], ['--p-text', 'text'], ['--p-tab', 'surface'], ['--p-input', 'bg'], ['--p-border', 'border']] as const)
+    t?.bg && t?.text && t[k] ? r.setProperty(v, t[k]!) : r.removeProperty(v)
+}
+
 const panel = new DeckPanel()
 shadow($('panel'), STYLES).append(panel.el)
 

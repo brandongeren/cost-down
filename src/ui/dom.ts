@@ -1,3 +1,5 @@
+import { themeVars, type ThemeColors } from './styles.ts'
+
 /** Tiny element builder: h('div', {class: 'x', onclick}, child, 'text'). */
 export function h<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -20,11 +22,21 @@ export function append(el: Element, ...children: (Node | string | null | undefin
   for (const c of children) if (c !== null && c !== undefined && c !== false) el.append(c)
 }
 
-/** A shadow root with Cost Down's styles, attached to host. */
+/** A shadow root with Cost Down's styles, attached to host (and the Firefox theme's colors, kept up to date). */
 export function shadow(host: HTMLElement, css: string): ShadowRoot {
   const root = host.shadowRoot ?? host.attachShadow({ mode: 'open' })
-  root.replaceChildren(h('style', null, css))
+  const theme = h('style', { 'data-theme': '' })
+  root.replaceChildren(h('style', null, css), theme)
+  void followTheme((cssText) => (theme.textContent = cssText))
   return root
+}
+
+/** Calls apply with themeVars() for the current Firefox theme now and whenever it changes ('' = no theme colors). */
+export async function followTheme(apply: (css: string) => void): Promise<void> {
+  apply(themeVars((await chrome.storage.local.get('theme')).theme as ThemeColors | undefined))
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && 'theme' in changes) apply(themeVars(changes.theme.newValue as ThemeColors | undefined))
+  })
 }
 
 /** Opens a page in a new tab (works from content scripts and extension pages). */
