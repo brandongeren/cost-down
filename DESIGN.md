@@ -86,11 +86,26 @@ big combined order.
 
 | Phase | What | Status |
 |---|---|---|
-| 1 | Skeleton: Chrome + Firefox builds, price download, panel, Mass Entry button, order list; a popup where you paste a .ydk / ydke:// list to test it all without a site | planned |
+| 1 | Skeleton: Chrome + Firefox builds, price download, panel, Mass Entry button, order list; a popup where you paste a .ydk / ydke:// list to test it all without a site | built 2026-10-30 |
 | 2 | Neuron / Konami deck pages | planned |
 | 3 | Duelingbook deck constructor | planned |
 | 4 | Fuwa Lab | planned |
 | 5 | Sharing it: store listings or a signed Firefox file + Chrome unpacked | planned |
+
+### Phase 1 as built (2026-10-30)
+
+- `scripts/build.ts` bundles each entry with esbuild into one classic script (content scripts can't be ES modules) and
+  writes a manifest per browser: Chrome `background.service_worker`; Firefox `background.scripts` plus
+  `browser_specific_settings.gecko` (id `cost-down@brandongeren.github.io`, Firefox 140+, `data_collection_permissions:
+  none`). Permissions: `storage`, host `brandongeren.github.io` only.
+- Background script: downloads `cost-down.json` into `storage.local` when missing or 20+ hours old.
+- Owned counts are per card (passcode) and shared by every deck; within a deck they cover Main, then Extra, then Side.
+  On the order list they count once for the whole order.
+- Each line shows its quantity and the price of the copies still needed; the header shows the card count, the total
+  still needed, and the whole deck crossed out when you own some.
+- Mass Entry gets names, one line per card (sections merged). Unpriced cards are still sent.
+- Popup: paste box (ydke://, .ydk text or file, text list) + order list tab. Text lists match names exactly (after
+  normalizing case and punctuation); others are listed as not matched.
 
 ## 7. Verified facts
 
@@ -104,6 +119,10 @@ big combined order.
 - 2026-10-30: Fuwa Lab is https://fuwalab.fr/en. Mascis uses Neuron both ways: share links in a browser and the deck
   builder on `db.yugioh-card.com`.
 
+- 2026-10-30: the Chrome build, loaded in Chromium: prices download, a 12-card deck prices (Cost Down $0.14 each),
+  owning 2 of 5 Ash Blossom leaves 3 in the Mass Entry link, the order list totals and sends the deck. Firefox build:
+  `web-ext lint` 0 errors (one warning: Firefox for Android needs 142+, not a target). Not yet run in Firefox itself.
+
 ## 8. Still open
 
 - Fuwa Lab: how it holds the deck.
@@ -111,4 +130,5 @@ big combined order.
 - Neuron / Konami: how the `db.yugioh-card.com` builder holds the deck (it needs a Konami ID login).
 - Mass Entry URL length limit (§5).
 - How Mascis installs it (see phase 5); a Chrome Web Store listing costs a one-time $5.
+- Text lists only match exact names; fuzzy matching (Chaos Catalog's search) if pasted lists often miss.
 - GitHub repo `brandongeren/cost-down`: the user creates it (no `gh` CLI here); then push `main`.

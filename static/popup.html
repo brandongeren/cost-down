@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cost Down</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <nav>
+      <button data-tab="paste" class="on">Price a deck</button>
+      <button data-tab="order">Order list</button>
+    </nav>
+    <section id="paste">
+      <textarea id="input" placeholder="Paste a ydke:// link, a .ydk file, or lines like &quot;3 Ash Blossom &amp; Joyous Spring&quot;"></textarea>
+      <div class="row"><input id="name" placeholder="Deck name" /><label class="file">Open .ydk<input id="file" type="file" accept=".ydk,.txt" hidden /></label></div>
+      <div id="panel"></div>
+    </section>
+    <section id="order" hidden><div id="orderlist"></div></section>
+    <script src="popup.js"></script>
+  </body>
+</html>
