@@ -14,6 +14,10 @@ const root = path.resolve(import.meta.dirname, '..')
 const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf-8')) as { version: string }
 const watch = process.argv.includes('--watch')
 
+// The whole site: it's a single-page app, so going from its home page to the builder doesn't load a new page. The
+// scripts do nothing until the builder's deck is on screen.
+const FUWA = ['https://fuwalab.fr/*']
+
 /** Content scripts per deck-builder site. `world: 'MAIN'` runs in the page's own JavaScript (no extension APIs). */
 const CONTENT_SCRIPTS: { matches: string[]; js: string; world?: 'MAIN' }[] = [
   // Neuron / Konami card database deck pages (Neuron share links redirect here).
@@ -22,6 +26,9 @@ const CONTENT_SCRIPTS: { matches: string[]; js: string; world?: 'MAIN' }[] = [
   // extension's content script.
   { matches: ['https://www.duelingbook.com/*', 'https://duelingbook.com/*'], js: 'duelingbook-page.js', world: 'MAIN' },
   { matches: ['https://www.duelingbook.com/*', 'https://duelingbook.com/*'], js: 'duelingbook.js' },
+  // Fuwa Lab's builder: same page-world pattern (window.A.getDeck()).
+  { matches: FUWA, js: 'fuwalab-page.js', world: 'MAIN' },
+  { matches: FUWA, js: 'fuwalab.js' },
 ]
 
 const ENTRIES: Record<string, string> = {

@@ -89,7 +89,7 @@ big combined order.
 | 1 | Skeleton: Chrome + Firefox builds, price download, panel, Mass Entry button, order list; a popup where you paste a .ydk / ydke:// list to test it all without a site | built 2026-10-30 |
 | 2 | Neuron / Konami deck pages | built 2026-10-30 (deck pages and the logged-in builder) |
 | 3 | Duelingbook deck constructor | built 2026-10-30; a signed-in check with a saved deck is the user's |
-| 4 | Fuwa Lab | planned |
+| 4 | Fuwa Lab | built 2026-10-30 |
 | 5 | Sharing: Chrome Web Store + Firefox Add-ons listings, and a signed Firefox file to hand out | prepared 2026-10-30; submitting needs the user's accounts |
 
 ### Phase 1 as built (2026-10-30)
@@ -162,6 +162,19 @@ big combined order.
   `.amo-credentials.json` (gitignored).
 - Chrome Web Store uploads are done by the user in the developer dashboard (one-time $5 developer fee).
 
+### Phase 4 as built (2026-10-30): Fuwa Lab
+
+- Fuwa Lab (`fuwalab.fr/builder`) is a single-page app whose builder core is plain scripts (`/js/deck.js` etc.). The
+  deck module is `window.A`: `A.getDeck()` returns {main, extra, side} as YGOPRODeck card objects (`id` = passcode),
+  and `ygo:deck-rendered` fires on window after each redraw. Same page-world pattern as Duelingbook
+  (`src/sites/fuwalab-page.ts` + `src/sites/fuwalab.ts`, shared handoff in `src/sites/bridge.ts`).
+- Scripts match the whole site (`https://fuwalab.fr/*`) because moving to the builder from Fuwa Lab's other pages
+  doesn't load a new page; they do nothing until the deck column (#dscroll) is on screen.
+- Fuwa Lab shows Cardmarket € prices: a subtotal per section header (`.sec-block[data-sec] .sec-hd-price`) and per
+  card in the hover overlay (`.dc-card[data-card-id] .dc-card-price`). Cost Down puts the TCGplayer $ right after
+  each (same CSS `order` as the € so it lands next to it); the panel floats bottom right, collapsed.
+- Order-list key `fuwalab:<share code>` for a saved deck, else the deck name.
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -201,9 +214,16 @@ big combined order.
   ($2.48 for 9 cards), followed an added card ($2.62), and the badge and panel went away on leaving the constructor.
   Its Import Deck asks for a new deck name first (a saved deck, needs an account), so it wasn't used for testing.
 
+- 2026-10-30: Fuwa Lab answers HTTP 429 to headless browsers that say "HeadlessChrome" in their user agent (fonts,
+  scripts and API calls all blocked); with an ordinary Chrome user agent the same page loaded with no 429s. Tests use
+  one load at a time, with pauses.
+- 2026-10-30: Fuwa Lab, signed out, in Chromium: a deck set with the app's own `A._setDeck()` showed $1.83 / $0.22 /
+  $0.43 next to 1.86€ / 0.02€ / 0.51€, and adding a card the same way moved Main to $1.97. Its Import menu needs a
+  deck created first; signed out, "Initialize deck" made no server call.
+
 ## 8. Still open
 
-- Fuwa Lab: how it holds the deck.
+- Fuwa Lab signed in: a saved deck's key (share code) and name, and a check with the real Import of a ydke code.
 - Duelingbook signed in: a saved deck's name shows in the panel (where `deck.deckData` keeps it is a guess), and the
   order-list key stays the same across reloads.
 - Neuron / Konami builder: does the total follow live edits (adding/removing a card without reloading)?

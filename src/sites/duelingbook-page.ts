@@ -7,15 +7,9 @@
 // Twice a second it posts {main, extra, side, name, id} (passcodes) to the extension's content script when it
 // changes, or null when the constructor isn't open. It only reads; it never calls anything that changes the deck.
 
-const w = window as any
+import { postDeckWhenChanged } from './bridge.ts'
 
-interface DbDeck {
-  main: number[]
-  extra: number[]
-  side: number[]
-  name: string
-  id: string
-}
+const w = window as any
 
 const passcodes = new Map<number, number>()
 function passcode(id: number): number {
@@ -38,25 +32,17 @@ function deckName(): string {
   return (fromData || shown || '').trim()
 }
 
-let last = ''
-function snapshot() {
-  let deck: DbDeck | null = null
-  try {
-    if (w.currentLabel === 'deck_constructor')
-      deck = {
-        main: list(w.deck_filled_arr),
-        extra: list(w.extra_filled_arr),
-        side: list(w.side_filled_arr),
-        name: deckName(),
-        id: String(w.currentDeckId ?? ''),
-      }
-  } catch {
-    deck = null
-  }
-  const sig = JSON.stringify(deck)
-  if (sig === last) return
-  last = sig
-  window.postMessage({ costDown: 'duelingbook', deck }, location.origin)
-}
-
-setInterval(snapshot, 500)
+postDeckWhenChanged(
+  'duelingbook',
+  () =>
+    w.currentLabel === 'deck_constructor'
+      ? {
+          main: list(w.deck_filled_arr),
+          extra: list(w.extra_filled_arr),
+          side: list(w.side_filled_arr),
+          name: deckName(),
+          id: String(w.currentDeckId ?? ''),
+        }
+      : null,
+  { everyMs: 500 },
+)

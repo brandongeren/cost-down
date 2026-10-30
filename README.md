@@ -32,6 +32,8 @@ Then click the Cost Down icon in the toolbar.
   right) has the owned counts and buttons.
 - **Duelingbook** deck constructor: the deck's price appears next to the card counters on the left, with the Cost Down
   panel under it. (Firefox: if the popup shows "Allow on deck sites" again, click it; each new site needs it once.)
+- **Fuwa Lab** builder: the TCGplayer price appears next to Fuwa Lab's own € price, for each section and on each
+  card's hover overlay.
 - **Neuron deck editor** (signed in, editing a deck): prices follow your edits, and a **Cost Down box** above the deck
   counters fills the whole deck from a pasted `ydke://` code. It replaces every card and saves nothing; check the
   deck, then press Konami's **Save**.

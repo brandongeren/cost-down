@@ -2,23 +2,12 @@
 // posts it here. On the page, like Limitless: the deck's price sits next to Duelingbook's card counters (the column of
 // numbers left of the deck grid), and the Cost Down panel fills the empty area above the deck buttons on the left.
 
-import type { RawDeck } from '../core/deck.ts'
 import { money, type PricedDeck } from '../core/prices.ts'
 import { h } from '../ui/dom.ts'
+import { pageDeck } from './bridge.ts'
 import { MARK, pageStyle, runSite } from './common.ts'
 
-interface DbDeck extends RawDeck {
-  name: string
-  id: string
-}
-
-let latest: DbDeck | null = null
-const listeners: (() => void)[] = []
-window.addEventListener('message', (e) => {
-  if (e.source !== window || e.data?.costDown !== 'duelingbook') return
-  latest = e.data.deck as DbDeck | null
-  for (const f of listeners) f()
-})
+const page = pageDeck('duelingbook')
 
 pageStyle(`
 .cd-db-total { position: fixed; z-index: 2147482000; box-sizing: border-box; padding: 4px 8px; border-radius: 6px;
@@ -31,11 +20,12 @@ const rect = (sel: string) => document.querySelector(sel)?.getBoundingClientRect
 
 void runSite({
   read() {
+    const latest = page.latest()
     if (!latest) return undefined
     const { main, extra, side, name, id } = latest
     return { deck: { main, extra, side }, name: name || 'Duelingbook deck', key: `duelingbook:${id || name || 'unsaved'}` }
   },
-  subscribe: (cb) => listeners.push(cb),
+  subscribe: page.subscribe,
   watch: () => document.querySelector('#deck_constructor .deck_bg'),
 
   decorate(priced, panel) {
