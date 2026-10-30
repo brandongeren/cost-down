@@ -165,7 +165,9 @@ big combined order.
 - 2026-10-30: editor filler, tested on the user's recorded editor page served in place of the live one (saves
   blocked): a 9/1/2 ydke code filled Main, Extra and Side with the right names, counts, ids and artwork values, and
   Konami's own totals updated (9 / 1 / 2). Monster/Spell/Trap split checked once `cost-down.json` has frame types.
-  Not yet saved on the real site.
+- 2026-10-30: saved on the real site by the user: a filled deck saves, and **Konami re-sorts cards into the right
+  table on Save** (spells and traps put in the Monster table, before frame types were live, came back correct). So the
+  frame-type split is for a correct view before saving, not something Save depends on.
 
 ## 8. Still open
 
