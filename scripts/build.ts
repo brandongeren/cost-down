@@ -15,7 +15,10 @@ const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf-8'))
 const watch = process.argv.includes('--watch')
 
 /** Content scripts per deck-builder site (filled in by phases 2-4). */
-const CONTENT_SCRIPTS: { matches: string[]; js: string }[] = []
+const CONTENT_SCRIPTS: { matches: string[]; js: string }[] = [
+  // Neuron / Konami card database deck pages (Neuron share links redirect here).
+  { matches: ['https://www.db.yugioh-card.com/yugiohdb/member_deck.action*'], js: 'konami.js' },
+]
 
 const ENTRIES: Record<string, string> = {
   background: 'src/background.ts',
@@ -37,7 +40,8 @@ function manifest(browser: 'chrome' | 'firefox') {
     background: browser === 'chrome' ? { service_worker: 'background.js' } : { scripts: ['background.js'] },
     content_scripts: CONTENT_SCRIPTS.map((c) => ({ matches: c.matches, js: [c.js], run_at: 'document_idle' })),
     web_accessible_resources: CONTENT_SCRIPTS.length
-      ? [{ resources: ['icons/32.png'], matches: [...new Set(CONTENT_SCRIPTS.flatMap((c) => c.matches))] }]
+      ? // Chrome only accepts origin-wide patterns here ("https://host/*").
+        [{ resources: ['icons/32.png'], matches: [...new Set(CONTENT_SCRIPTS.flatMap((c) => c.matches.map((m) => `${new URL(m).origin}/*`)))] }]
       : undefined,
     ...(browser === 'firefox'
       ? {

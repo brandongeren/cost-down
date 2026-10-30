@@ -87,7 +87,7 @@ big combined order.
 | Phase | What | Status |
 |---|---|---|
 | 1 | Skeleton: Chrome + Firefox builds, price download, panel, Mass Entry button, order list; a popup where you paste a .ydk / ydke:// list to test it all without a site | built 2026-10-30 |
-| 2 | Neuron / Konami deck pages | planned |
+| 2 | Neuron / Konami deck pages | deck pages built 2026-10-30; the logged-in builder (edit page) not yet checked |
 | 3 | Duelingbook deck constructor | planned |
 | 4 | Fuwa Lab | planned |
 | 5 | Sharing it: store listings or a signed Firefox file + Chrome unpacked | planned |
@@ -107,6 +107,18 @@ big combined order.
 - Popup: paste box (ydke://, .ydk text or file, text list) + order list tab. Text lists match names exactly (after
   normalizing case and punctuation); others are listed as not matched.
 
+### Phase 2 as built (2026-10-30): Neuron / Konami deck pages
+
+- Content script `src/sites/konami.ts` on `www.db.yugioh-card.com/yugiohdb/member_deck.action*`; shared plumbing in
+  `src/sites/common.ts` (floating panel bottom right, starts collapsed to header + buttons; re-reads the deck when the
+  page changes; everything Cost Down adds carries `data-cost-down`).
+- Reads the List view tables (present in the page whatever view is shown): Konami id from each row's
+  `input.link_value`, copies from `td.num`, mapped to passcodes by `kid`.
+- On the page, like Limitless: a fourth counter "TCGplayer Price $x" (or "Still to buy") in the site's own hex-button
+  style next to "Total in Main/Extra/Side Deck" (it opens the panel), and a price on every row of the List and Detailed
+  List views. The Gallery view has none (the panel lists everything).
+- Order-list key `konami:<cgid>:<dno>`, so the language or view in the URL doesn't make a second copy.
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -123,11 +135,17 @@ big combined order.
   owning 2 of 5 Ash Blossom leaves 3 in the Mass Entry link, the order list totals and sends the deck. Firefox build:
   `web-ext lint` 0 errors (one warning: Firefox for Android needs 142+, not a target). Not yet run in Firefox itself.
 
+- 2026-10-30: Konami deck page (sample Neuron link `neuron.konami.net/link/ftxszr4z0w4b701l`, 42/15/15): all 46
+  cards priced ($577.07), 92 row prices placed (List + Detailed List), the total box and the panel work in Chromium.
+  Chrome rejects a manifest whose `web_accessible_resources.matches` has a path other than `/*` (the extension
+  silently doesn't load), so the build uses origin-wide patterns there.
+
 ## 8. Still open
 
 - Fuwa Lab: how it holds the deck.
 - Duelingbook: how to read the deck the constructor is editing (page DOM vs its own data).
-- Neuron / Konami: how the `db.yugioh-card.com` builder holds the deck (it needs a Konami ID login).
+- Neuron / Konami: the logged-in deck builder (edit page, `member_deck.action?ope=2...`): whether it uses the same
+  List tables (then it already works) or needs its own reader. Needs a Konami ID login to check.
 - Mass Entry URL length limit (§5).
 - How Mascis installs it (see phase 5); a Chrome Web Store listing costs a one-time $5.
 - Text lists only match exact names; fuzzy matching (Chaos Catalog's search) if pasted lists often miss.

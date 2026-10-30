@@ -26,7 +26,10 @@ Then click the Cost Down icon in the toolbar.
 
 - **Price a deck:** paste a `ydke://` link, a `.ydk` file, or a text list (`3 Ash Blossom & Joyous Spring`, optional
   `Main` / `Extra` / `Side` headings). Any builder that exports one of these works (Duelingbook, EDOPro, YGOPRODeck,
-  ...). Deck-builder sites get the panel right on the page in later phases (Neuron, Duelingbook, Fuwa Lab).
+  ...).
+- **Neuron / Konami deck pages** (`db.yugioh-card.com`, where Neuron share links open): the deck's TCGplayer price
+  appears next to "Total in Main / Extra / Side Deck", each card row shows its price, and the Cost Down panel (bottom
+  right) has the owned counts and buttons. Duelingbook and Fuwa Lab come next.
 - **own −/+** on a card: copies you own. They're remembered for every deck and taken off the price and the order.
 - **TCGplayer Mass Entry:** opens TCGplayer's Mass Entry with what you still need. Check the printing and condition
   options there, then **Add to Cart**.

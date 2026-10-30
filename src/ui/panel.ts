@@ -3,7 +3,7 @@
 
 import { SECTION_LABEL, SECTIONS, deckSize, type RawDeck } from '../core/deck.ts'
 import { massEntryUrl } from '../core/massentry.ts'
-import { money, priceDeck, shoppingList, type Owned, type PriceIndex } from '../core/prices.ts'
+import { money, priceDeck, shoppingList, type Owned, type PricedDeck, type PriceIndex } from '../core/prices.ts'
 import { addToOrder, getOrder, getOwned, onStoreChange, setOwnedCount, type OrderDeck } from '../core/store.ts'
 import { append, h, logo, openTab } from './dom.ts'
 
@@ -24,7 +24,16 @@ export class DeckPanel {
   private current?: PanelDeck
   private collapsed = false
 
-  constructor(private readonly opts: { collapsible?: boolean; onClose?: () => void } = {}) {
+  constructor(
+    private readonly opts: {
+      collapsible?: boolean
+      startCollapsed?: boolean
+      onClose?: () => void
+      /** Called after every render with the priced deck (site adapters use it to put prices on the page). */
+      onPriced?: (priced: PricedDeck | undefined) => void
+    } = {},
+  ) {
+    this.collapsed = !!opts.startCollapsed
     onStoreChange((keys) => {
       if (keys.includes('owned') || keys.includes('order')) void this.reload()
     })
@@ -62,6 +71,7 @@ export class DeckPanel {
       header.append(h('span', { class: 'title' }, 'Cost Down'))
       children.push(h('div', { class: 'body' }, h('div', { class: 'empty' }, 'No cards in this deck yet.')))
       this.el.replaceChildren(...children)
+      this.opts.onPriced?.(undefined)
       return
     }
 
@@ -144,6 +154,13 @@ export class DeckPanel {
       ),
     )
     this.el.replaceChildren(...children)
+    this.opts.onPriced?.(priced)
+  }
+
+  /** Opens the card list (site adapters call it when their on-page total is clicked). */
+  expand() {
+    this.collapsed = false
+    this.render()
   }
 
   private ownControl(id: number) {
