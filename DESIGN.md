@@ -87,7 +87,7 @@ big combined order.
 | Phase | What | Status |
 |---|---|---|
 | 1 | Skeleton: Chrome + Firefox builds, price download, panel, Mass Entry button, order list; a popup where you paste a .ydk / ydke:// list to test it all without a site | built 2026-10-30 |
-| 2 | Neuron / Konami deck pages | deck pages built 2026-10-30; the logged-in builder (edit page) not yet checked |
+| 2 | Neuron / Konami deck pages | built 2026-10-30 (deck pages and the logged-in builder) |
 | 3 | Duelingbook deck constructor | planned |
 | 4 | Fuwa Lab | planned |
 | 5 | Sharing it: store listings or a signed Firefox file + Chrome unpacked | planned |
@@ -143,13 +143,13 @@ big combined order.
 - 2026-10-30: works in Firefox on a Neuron deck page (checked by the user). Firefox doesn't grant an add-on's website
   access at install, so content scripts don't run until it's allowed; the popup shows "Allow on deck sites"
   (`chrome.permissions.request`) when it's missing, and that fixed it.
+- 2026-10-30: the logged-in Konami deck builder (edit page) shows the prices too (checked by the user in Firefox).
 
 ## 8. Still open
 
 - Fuwa Lab: how it holds the deck.
 - Duelingbook: how to read the deck the constructor is editing (page DOM vs its own data).
-- Neuron / Konami: the logged-in deck builder (edit page, `member_deck.action?ope=2...`): whether it uses the same
-  List tables (then it already works) or needs its own reader. Needs a Konami ID login to check.
+- Neuron / Konami builder: does the total follow live edits (adding/removing a card without reloading)?
 - Mass Entry URL length limit (§5).
 - How Mascis installs it (see phase 5); a Chrome Web Store listing costs a one-time $5.
 - Text lists only match exact names; fuzzy matching (Chaos Catalog's search) if pasted lists often miss.
