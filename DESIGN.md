@@ -186,6 +186,16 @@ big combined order.
 - The toolbar popup shows "Show the Cost Down panel on this page" when the current tab is a supported deck page
   (it asks the tab's content script; no `tabs` permission needed).
 
+### Moving and hiding the on-page panel (2026-10-30, user requests)
+
+- Drag the panel by its header anywhere on screen; the spot is remembered per site (`panelPos` by hostname) and
+  overrides the site's default placement; double-click the header to put it back. The reopen button follows it.
+- Popup switch **"Keep the panel hidden until I open it"** (`panelHidden`): deck pages start with only the small
+  reopen button; it, the price on the page or the popup's "Show the Cost Down panel on this page" opens the panel.
+  On-page prices stay visible.
+- Nothing shows on a site's pages until a deck is on screen (Duelingbook: only in the deck constructor, and on deck
+  link pages).
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -234,6 +244,10 @@ big combined order.
 
 - 2026-10-30: reopen tested on a Neuron deck page: × hides the panel and shows the button; the button, the page's
   price total and the popup's message each bring it back.
+
+- 2026-10-30: drag tested on a Neuron deck page: dragged 400 px left and 300 px up, the same spot after a reload,
+  double-click put it back; with the switch on, a new page load showed only the reopen button (page price still shown)
+  and clicking it opened the panel.
 
 ## 8. Still open
 

@@ -2,6 +2,8 @@
 //   prices  the downloaded price file and when it was fetched (refreshed by the background script, at most daily)
 //   owned   copies you own, by passcode; they apply to every deck
 //   order   the order list: decks to buy together in one Mass Entry
+//   panelHidden  the popup's "Keep the panel hidden until I open it" switch
+//   panelPos     where the user dragged the on-page panel, per site
 
 import type { RawDeck } from './deck.ts'
 import { PriceIndex, type Owned, type PriceFile } from './prices.ts'
@@ -48,6 +50,15 @@ export async function addToOrder(d: Omit<OrderDeck, 'addedAt'>): Promise<void> {
 
 export async function removeFromOrder(key: string): Promise<void> {
   await setOrder((await getOrder()).filter((o) => o.key !== key))
+}
+
+/** The popup's "Keep the panel hidden until I open it" switch (off unless turned on). */
+export async function getPanelHidden(): Promise<boolean> {
+  return ((await chrome.storage.local.get('panelHidden')).panelHidden as boolean | undefined) ?? false
+}
+
+export async function setPanelHidden(on: boolean): Promise<void> {
+  await chrome.storage.local.set({ panelHidden: on })
 }
 
 /** Asks the background script to make sure prices are downloaded (fetching if missing or a day old), then loads them. */

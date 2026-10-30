@@ -1,7 +1,7 @@
 // The toolbar popup: price a pasted decklist (works for any builder that exports .ydk / ydke://), and the order list.
 
 import { parseDeck } from '../core/deck.ts'
-import { loadPrices } from '../core/store.ts'
+import { getPanelHidden, loadPrices, setPanelHidden } from '../core/store.ts'
 import { shadow } from '../ui/dom.ts'
 import { OrderList } from '../ui/order.ts'
 import { DeckPanel } from '../ui/panel.ts'
@@ -33,6 +33,13 @@ async function checkSiteAccess() {
   })
 }
 
+// "Keep the panel hidden until I open it": deck pages start with only the small Cost Down button.
+async function hiddenSwitch() {
+  const cb = $<HTMLInputElement>('onpagescb')
+  cb.checked = await getPanelHidden()
+  cb.addEventListener('change', () => void setPanelHidden(cb.checked))
+}
+
 // On a supported deck page, offer to bring back the on-page panel (after it was closed with ×).
 async function offerShowPanel() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
@@ -40,14 +47,15 @@ async function offerShowPanel() {
   const reply = (await chrome.tabs.sendMessage(tab.id, { type: 'costDownPing' }).catch(() => undefined)) as { hasDeck?: boolean } | undefined
   if (!reply?.hasDeck) return
   $('showpanel').hidden = false
-  $('showpanelbtn').addEventListener('click', async () => {
+  $('showpanelbtn').onclick = async () => {
     await chrome.tabs.sendMessage(tab.id!, { type: 'costDownShowPanel' }).catch(() => undefined)
     window.close()
-  })
+  }
 }
 
 async function main() {
   void checkSiteAccess()
+  void hiddenSwitch()
   void offerShowPanel()
   let index
   try {

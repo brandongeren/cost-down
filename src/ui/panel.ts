@@ -60,7 +60,7 @@ export class DeckPanel {
 
   private render() {
     const { index, current } = this
-    const header = h('div', { class: 'head' }, logo())
+    const header = h('div', { class: 'head', title: this.opts.collapsible ? 'Drag to move · double-click to put it back' : null }, logo())
     const children: Node[] = [header]
 
     if (!index) {

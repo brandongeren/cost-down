@@ -12,3 +12,9 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; font: 12px ui-mono
 #perm button { display: block; margin-top: 6px; font: inherit; font-weight: 700; color: #fff; background: #1a9b7e; border: none; border-radius: 7px; padding: 5px 10px; cursor: pointer; }
 #showpanel { margin: 8px 8px 0; }
 #showpanel button { width: 100%; font: inherit; font-weight: 700; color: #fff; background: #1a9b7e; border: none; border-radius: 7px; padding: 6px 10px; cursor: pointer; }
+#onpages { display: flex; align-items: center; gap: 8px; margin: 8px 8px 0; cursor: pointer; user-select: none; }
+#onpages input { display: none; }
+#onpages .sw { width: 32px; height: 18px; border-radius: 9px; background: #c5cad0; position: relative; flex: none; transition: background .15s; }
+#onpages .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: left .15s; }
+#onpages input:checked + .sw { background: #1a9b7e; }
+#onpages input:checked + .sw::after { left: 16px; }

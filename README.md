@@ -40,6 +40,9 @@ Then click the Cost Down icon in the toolbar.
 - **own −/+** on a card: copies you own. They're remembered for every deck and taken off the price and the order.
 - **× closes the on-page panel**; the small round Cost Down button that's left (or the price on the page, or the
   toolbar popup's "Show the Cost Down panel on this page") brings it back.
+- **Drag the panel** by its header wherever you like (remembered per site; double-click the header to put it back).
+  The popup's **"Keep the panel hidden until I open it"** switch starts every deck page with just the small Cost Down
+  button.
 - **TCGplayer Mass Entry:** opens TCGplayer's Mass Entry with what you still need. Check the printing and condition
   options there, then **Add to Cart**.
 - **Order list:** **Add to order list** on any deck, then the **Order list** tab sends every deck at once (owned copies
