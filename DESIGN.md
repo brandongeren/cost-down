@@ -140,6 +140,10 @@ big combined order.
   Chrome rejects a manifest whose `web_accessible_resources.matches` has a path other than `/*` (the extension
   silently doesn't load), so the build uses origin-wide patterns there.
 
+- 2026-10-30: works in Firefox on a Neuron deck page (checked by the user). Firefox doesn't grant an add-on's website
+  access at install, so content scripts don't run until it's allowed; the popup shows "Allow on deck sites"
+  (`chrome.permissions.request`) when it's missing, and that fixed it.
+
 ## 8. Still open
 
 - Fuwa Lab: how it holds the deck.
