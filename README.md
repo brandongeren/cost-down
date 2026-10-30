@@ -55,7 +55,9 @@ npm run package      # dist/packages/cost-down-chrome-<version>.zip and cost-dow
 ```
 
 The Chrome zip can be uploaded to the Chrome Web Store, or unzipped and loaded unpacked. Firefox only installs
-permanently from a Mozilla-signed file (see DESIGN.md §6 phase 5).
+permanently from a Mozilla-signed file: `npm run sign:firefox` (signed file to hand out) or
+`npm run sign:firefox -- --listed` (submit to Firefox Add-ons); both need a Mozilla API key in `.amo-credentials.json`
+(see the script's header). Store text, screenshots and the privacy policy are in `store/` and `PRIVACY.md`.
 
 ## Development
 

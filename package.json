@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "package": "npm run build && web-ext build -s dist/chrome -a dist/packages -n cost-down-chrome-{version}.zip -o && web-ext build -s dist/firefox -a dist/packages -n cost-down-firefox-{version}.zip -o",
-    "lint:firefox": "web-ext lint -s dist/firefox"
+    "lint:firefox": "web-ext lint -s dist/firefox",
+    "package:source": "node -e \"require('fs').mkdirSync('dist/packages',{recursive:true})\" && git archive --format=zip -o dist/packages/cost-down-source-$npm_package_version.zip HEAD",
+    "sign:firefox": "tsx scripts/sign-firefox.ts"
   },
   "engines": {
     "node": ">=20.19"

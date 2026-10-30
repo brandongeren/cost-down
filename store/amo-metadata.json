@@ -1,0 +1,8 @@
+{
+  "categories": { "firefox": ["shopping"] },
+  "summary": { "en-US": "See what your Yu-Gi-Oh! deck costs on TCGplayer while you build it, drop the cards you own, and buy the rest with one click." },
+  "description": { "en-US": "Cost Down puts TCGplayer prices on the Yu-Gi-Oh! deck builder you already use.\n\n• The deck's price appears next to the builder's card counts, and every card shows its price.\n• Mark the copies you already own: the total drops to what you still need, and owned counts carry over to every deck.\n• One click opens TCGplayer Mass Entry with exactly the cards you still need.\n• Order list: add several decks and buy them all in one Mass Entry.\n• Works on Yu-Gi-Oh! Neuron / the Konami card database, Duelingbook and Fuwa Lab, and with any ydke:// code, .ydk file or text list pasted into the toolbar popup.\n• On the Neuron deck editor, paste a ydke:// code to fill the whole deck; you check it and press Save yourself.\n\nPrices are TCGplayer market prices (USD), cheapest printing, updated daily. Cost Down collects no data.\n\nNot affiliated with Konami, TCGplayer, Duelingbook or Fuwa Lab." },
+  "homepage": { "en-US": "https://github.com/brandongeren/cost-down" },
+  "support_url": { "en-US": "https://github.com/brandongeren/cost-down/issues" },
+  "version": { "approval_notes": "Built with esbuild (bundling only, not minified) from the attached source: Node 20+, npm ci, npm run build; the Firefox build is dist/firefox. src/sites/duelingbook-page.ts runs in the page (world MAIN) and only reads the deck constructor's variables, posting card passcodes to the content script." }
+}

@@ -90,7 +90,7 @@ big combined order.
 | 2 | Neuron / Konami deck pages | built 2026-10-30 (deck pages and the logged-in builder) |
 | 3 | Duelingbook deck constructor | built 2026-10-30; a signed-in check with a saved deck is the user's |
 | 4 | Fuwa Lab | planned |
-| 5 | Sharing it: store listings or a signed Firefox file + Chrome unpacked | planned |
+| 5 | Sharing: Chrome Web Store + Firefox Add-ons listings, and a signed Firefox file to hand out | prepared 2026-10-30; submitting needs the user's accounts |
 
 ### Phase 1 as built (2026-10-30)
 
@@ -150,6 +150,18 @@ big combined order.
   dropdown), else "Duelingbook deck".
 - Duelingbook's own Import Deck takes ydke codes already, so there's no Cost Down filler there.
 
+### Phase 5: sharing (decided 2026-10-30)
+
+- The user wants both browsers, for anyone ("other people will want to use this"): a **Chrome Web Store** listing, a
+  **Firefox Add-ons** listing, and a **signed Firefox file** to hand out directly.
+- Prepared in the repo: `PRIVACY.md` (the privacy policy URL both stores ask for), `store/LISTING.md` (listing text and
+  Chrome's "privacy practices" answers), `store/amo-metadata.json` (Mozilla listing), `store/screenshots/` (1280x800,
+  taken from the real build on Neuron and Duelingbook), `store/promo-tile-440x280.png`.
+- `npm run package` zips both builds; `npm run package:source` zips the source (`git archive HEAD`) for Mozilla's
+  reviewers; `npm run sign:firefox [-- --listed]` signs through Mozilla with the user's API key from
+  `.amo-credentials.json` (gitignored).
+- Chrome Web Store uploads are done by the user in the developer dashboard (one-time $5 developer fee).
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -196,6 +208,8 @@ big combined order.
   order-list key stays the same across reloads.
 - Neuron / Konami builder: does the total follow live edits (adding/removing a card without reloading)?
 - Mass Entry URL length limit (§5).
-- How Mascis installs it (see phase 5); a Chrome Web Store listing costs a one-time $5.
+- Store artwork: the icon and promo tile use Konami's card art (Cost Down); fine for personal use, may be a problem
+  for public listings. Decide before submitting.
+- License for the public listings (Mozilla asks for one).
 - Text lists only match exact names; fuzzy matching (Chaos Catalog's search) if pasted lists often miss.
 - GitHub repo `brandongeren/cost-down`: the user creates it (no `gh` CLI here); then push `main`.
