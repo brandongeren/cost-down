@@ -8,3 +8,5 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; font: 12px ui-mono
 .row input { flex: 1; font: inherit; border: 1px solid #d5d9dd; border-radius: 7px; padding: 4px 8px; }
 .file { border: 1px solid #d5d9dd; background: #eef0f2; border-radius: 7px; padding: 4px 9px; cursor: pointer; white-space: nowrap; }
 #panel, #orderlist { max-height: 430px; display: block; }
+#perm { margin: 8px; padding: 8px; border-radius: 8px; background: #fff4e0; border: 1px solid #f0c27a; }
+#perm button { display: block; margin-top: 6px; font: inherit; font-weight: 700; color: #fff; background: #1a9b7e; border: none; border-radius: 7px; padding: 5px 10px; cursor: pointer; }

@@ -21,7 +21,20 @@ shadow($('panel'), STYLES).append(panel.el)
 // A pasted deck gets one key per paste session, so "Update in order list" replaces it rather than adding twice.
 const pasteKey = `paste:${crypto.randomUUID()}`
 
+// Firefox doesn't grant an add-on's website access at install (Chrome does), so content scripts don't run until
+// the user allows it. Ask here, where a button click counts as the user gesture the request needs.
+async function checkSiteAccess() {
+  const origins = [...new Set((chrome.runtime.getManifest().content_scripts ?? []).flatMap((c) => c.matches ?? []))]
+  if (!origins.length || (await chrome.permissions.contains({ origins }))) return
+  const box = $('perm')
+  box.hidden = false
+  $('permbtn').addEventListener('click', async () => {
+    if (await chrome.permissions.request({ origins })) box.hidden = true
+  })
+}
+
 async function main() {
+  void checkSiteAccess()
   let index
   try {
     index = await loadPrices()
