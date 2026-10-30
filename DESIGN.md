@@ -160,7 +160,11 @@ big combined order.
 - `npm run package` zips both builds; `npm run package:source` zips the source (`git archive HEAD`) for Mozilla's
   reviewers; `npm run sign:firefox [-- --listed]` signs through Mozilla with the user's API key from
   `.amo-credentials.json` (gitignored).
-- Chrome Web Store uploads are done by the user in the developer dashboard (one-time $5 developer fee).
+- Chrome Web Store uploads are done by the user in the developer dashboard, under a friend's developer account.
+- License: MIT (user decision 2026-10-30). Artwork: keep the Cost Down card art for the icon and promo tile (user
+  decision 2026-10-30; noted in LICENSE as Konami's, not covered).
+- Before the store: Mascis tests a local build (`cost-down-for-testing.zip`: unpacked Chrome folder, Firefox zip,
+  install steps).
 
 ### Phase 4 as built (2026-10-30): Fuwa Lab
 
@@ -228,8 +232,5 @@ big combined order.
   order-list key stays the same across reloads.
 - Neuron / Konami builder: does the total follow live edits (adding/removing a card without reloading)?
 - Mass Entry URL length limit (§5).
-- Store artwork: the icon and promo tile use Konami's card art (Cost Down); fine for personal use, may be a problem
-  for public listings. Decide before submitting.
-- License for the public listings (Mozilla asks for one).
 - Text lists only match exact names; fuzzy matching (Chaos Catalog's search) if pasted lists often miss.
 - GitHub repo `brandongeren/cost-down`: the user creates it (no `gh` CLI here); then push `main`.
