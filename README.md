@@ -37,7 +37,8 @@ Then click the Cost Down icon in the toolbar.
 - **Neuron deck editor** (signed in, editing a deck): prices follow your edits, and a **Cost Down box** above the deck
   counters fills the whole deck from a pasted `ydke://` code. It replaces every card and saves nothing; check the
   deck, then press Konami's **Save**.
-- **own −/+** on a card: copies you own. They're remembered for every deck and taken off the price and the order.
+- **own − / + / All** on a card: copies you own (All = every copy in this deck). They're remembered for every deck and
+  taken off the price and the order.
 - **× closes the on-page panel**; the small round Cost Down button that's left (or the price on the page, or the
   toolbar popup's "Show the Cost Down panel on this page") brings it back.
 - **Drag the panel** by its header wherever you like (remembered per site; double-click the header to put it back).

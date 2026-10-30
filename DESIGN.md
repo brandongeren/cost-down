@@ -194,7 +194,10 @@ big combined order.
   reopen button; it, the price on the page or the popup's "Show the Cost Down panel on this page" opens the panel.
   On-page prices stay visible.
 - Nothing shows on a site's pages until a deck is on screen (Duelingbook: only in the deck constructor, and on deck
-  link pages).
+  link pages `/deck?id=`, which use the same deck screen; the id comes from the link). Card elements carry their
+  passcode (`.data('serial_number')`), which works there too; deck link pages don't load the full card list.
+- Owned counts: **− n + All** per line; All sets the count to every copy of that card in the loaded deck (all
+  sections). The card list keeps its scroll position when the panel redraws (it used to jump to the top on +/−).
 
 ## 7. Verified facts
 
@@ -248,6 +251,10 @@ big combined order.
 - 2026-10-30: drag tested on a Neuron deck page: dragged 400 px left and 300 px up, the same spot after a reload,
   double-click put it back; with the switch on, a new page load showed only the reopen button (page price still shown)
   and clicking it opened the panel.
+
+- 2026-10-30: Duelingbook deck link page (behind Cloudflare's human check, so cards were put on screen with the
+  app's functions): priced ($1.79), × then the corner TCGplayer badge reopened the panel; nothing shows on the front
+  page or before cards load. Neuron: scrolled list stayed at 600 px after +; All on Ash Blossom set owned to 3.
 
 ## 8. Still open
 

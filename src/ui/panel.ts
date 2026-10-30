@@ -59,6 +59,14 @@ export class DeckPanel {
   }
 
   private render() {
+    // Re-rendering replaces the card list; keep it scrolled where it was (an own +/− shouldn't jump to the top).
+    const scroll = this.el.querySelector('.body')?.scrollTop ?? 0
+    this.draw()
+    const body = this.el.querySelector('.body')
+    if (body) body.scrollTop = scroll
+  }
+
+  private draw() {
     const { index, current } = this
     const header = h('div', { class: 'head', title: this.opts.collapsible ? 'Drag to move · double-click to put it back' : null }, logo())
     const children: Node[] = [header]
@@ -107,7 +115,7 @@ export class DeckPanel {
                 { class: `line${l.need ? '' : ' done'}` },
                 h('span', { class: 'qty' }, String(l.qty)),
                 h('span', { class: 'name', title: l.name }, l.name),
-                this.ownControl(l.id),
+                this.ownControl(l.id, priced.lines.filter((x) => x.id === l.id).reduce((n, x) => n + x.qty, 0)),
                 l.unit === undefined
                   ? h('span', { class: 'price none', title: 'No TCGplayer price' }, '—')
                   : h('span', { class: 'price', title: `${money(l.unit)} each` }, money(l.total)),
@@ -166,7 +174,8 @@ export class DeckPanel {
     this.render()
   }
 
-  private ownControl(id: number) {
+  /** own − n + All: copies you own (for every deck); All = every copy of this card in this deck (all sections). */
+  private ownControl(id: number, inDeck: number) {
     const n = this.owned[id] ?? 0
     return h(
       'span',
@@ -175,6 +184,11 @@ export class DeckPanel {
       h('button', { disabled: !n, onclick: () => void setOwnedCount(id, n - 1) }, '−'),
       h('span', { class: 'n' }, String(n)),
       h('button', { onclick: () => void setOwnedCount(id, n + 1) }, '+'),
+      h(
+        'button',
+        { class: 'all', disabled: n === inDeck, title: `I own all ${inDeck} in this deck`, onclick: () => void setOwnedCount(id, inDeck) },
+        'All',
+      ),
     )
   }
 
