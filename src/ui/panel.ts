@@ -29,6 +29,8 @@ export class DeckPanel {
       collapsible?: boolean
       startCollapsed?: boolean
       onClose?: () => void
+      /** Called by expand() (on-page totals), so a closed panel can come back. */
+      onExpand?: () => void
       /** Called after every render with the priced deck (site adapters use it to put prices on the page). */
       onPriced?: (priced: PricedDeck | undefined) => void
     } = {},
@@ -160,6 +162,7 @@ export class DeckPanel {
   /** Opens the card list (site adapters call it when their on-page total is clicked). */
   expand() {
     this.collapsed = false
+    this.opts.onExpand?.()
     this.render()
   }
 

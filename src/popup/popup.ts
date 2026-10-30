@@ -33,8 +33,22 @@ async function checkSiteAccess() {
   })
 }
 
+// On a supported deck page, offer to bring back the on-page panel (after it was closed with ×).
+async function offerShowPanel() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+  if (tab?.id === undefined) return
+  const reply = (await chrome.tabs.sendMessage(tab.id, { type: 'costDownPing' }).catch(() => undefined)) as { hasDeck?: boolean } | undefined
+  if (!reply?.hasDeck) return
+  $('showpanel').hidden = false
+  $('showpanelbtn').addEventListener('click', async () => {
+    await chrome.tabs.sendMessage(tab.id!, { type: 'costDownShowPanel' }).catch(() => undefined)
+    window.close()
+  })
+}
+
 async function main() {
   void checkSiteAccess()
+  void offerShowPanel()
   let index
   try {
     index = await loadPrices()

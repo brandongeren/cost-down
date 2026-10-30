@@ -179,6 +179,13 @@ big combined order.
   each (same CSS `order` as the € so it lands next to it); the panel floats bottom right, collapsed.
 - Order-list key `fuwalab:<share code>` for a saved deck, else the deck name.
 
+### Closing and reopening the on-page panel (2026-10-30, user request)
+
+- × on the panel hides it for that page and leaves a small round Cost Down button (bottom right, above the corner;
+  on Duelingbook where the panel was). Clicking it, or the on-page price total, brings the panel back.
+- The toolbar popup shows "Show the Cost Down panel on this page" when the current tab is a supported deck page
+  (it asks the tab's content script; no `tabs` permission needed).
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -224,6 +231,9 @@ big combined order.
 - 2026-10-30: Fuwa Lab, signed out, in Chromium: a deck set with the app's own `A._setDeck()` showed $1.83 / $0.22 /
   $0.43 next to 1.86€ / 0.02€ / 0.51€, and adding a card the same way moved Main to $1.97. Its Import menu needs a
   deck created first; signed out, "Initialize deck" made no server call.
+
+- 2026-10-30: reopen tested on a Neuron deck page: × hides the panel and shows the button; the button, the page's
+  price total and the popup's message each bring it back.
 
 ## 8. Still open
 
