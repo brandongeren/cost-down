@@ -14,10 +14,14 @@ const root = path.resolve(import.meta.dirname, '..')
 const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf-8')) as { version: string }
 const watch = process.argv.includes('--watch')
 
-/** Content scripts per deck-builder site (filled in by phases 2-4). */
-const CONTENT_SCRIPTS: { matches: string[]; js: string }[] = [
+/** Content scripts per deck-builder site. `world: 'MAIN'` runs in the page's own JavaScript (no extension APIs). */
+const CONTENT_SCRIPTS: { matches: string[]; js: string; world?: 'MAIN' }[] = [
   // Neuron / Konami card database deck pages (Neuron share links redirect here).
   { matches: ['https://www.db.yugioh-card.com/yugiohdb/member_deck.action*'], js: 'konami.js' },
+  // Duelingbook's deck constructor: a page-world script reads the deck from the app's variables and posts it to the
+  // extension's content script.
+  { matches: ['https://www.duelingbook.com/*', 'https://duelingbook.com/*'], js: 'duelingbook-page.js', world: 'MAIN' },
+  { matches: ['https://www.duelingbook.com/*', 'https://duelingbook.com/*'], js: 'duelingbook.js' },
 ]
 
 const ENTRIES: Record<string, string> = {
@@ -38,7 +42,7 @@ function manifest(browser: 'chrome' | 'firefox') {
     // Prices are Chaos Catalog's published file (DESIGN.md §4).
     host_permissions: ['https://brandongeren.github.io/*'],
     background: browser === 'chrome' ? { service_worker: 'background.js' } : { scripts: ['background.js'] },
-    content_scripts: CONTENT_SCRIPTS.map((c) => ({ matches: c.matches, js: [c.js], run_at: 'document_idle' })),
+    content_scripts: CONTENT_SCRIPTS.map((c) => ({ matches: c.matches, js: [c.js], run_at: 'document_idle', ...(c.world ? { world: c.world } : {}) })),
     web_accessible_resources: CONTENT_SCRIPTS.length
       ? // Chrome only accepts origin-wide patterns here ("https://host/*").
         [{ resources: ['icons/32.png'], matches: [...new Set(CONTENT_SCRIPTS.flatMap((c) => c.matches.map((m) => `${new URL(m).origin}/*`)))] }]

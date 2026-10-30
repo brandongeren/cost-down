@@ -1,0 +1,62 @@
+// Runs in Duelingbook's own page JavaScript (manifest `world: "MAIN"`), because the deck lives in the app's variables,
+// not in the DOM. Observed in main.js and checked in a browser (2026-10-30, DESIGN.md §7):
+// - `currentLabel` is "deck_constructor" while the deck constructor is open.
+// - `deck_filled_arr`, `extra_filled_arr`, `side_filled_arr`: arrays of jQuery card elements; `.data('id')` is
+//   Duelingbook's card id. `getCard(id).serial_number` is the passcode (a string).
+// - `currentDeckId` and `deck.deckData` (the loaded deck's data) identify the saved deck.
+// Twice a second it posts {main, extra, side, name, id} (passcodes) to the extension's content script when it
+// changes, or null when the constructor isn't open. It only reads; it never calls anything that changes the deck.
+
+const w = window as any
+
+interface DbDeck {
+  main: number[]
+  extra: number[]
+  side: number[]
+  name: string
+  id: string
+}
+
+const passcodes = new Map<number, number>()
+function passcode(id: number): number {
+  let p = passcodes.get(id)
+  if (p === undefined) {
+    p = Number(w.getCard?.(id)?.serial_number) || 0
+    passcodes.set(id, p)
+  }
+  return p
+}
+
+const list = (arr: unknown): number[] =>
+  Array.isArray(arr) ? arr.map((el: any) => passcode(Number(el?.data?.('id')))).filter((p) => p > 0) : []
+
+function deckName(): string {
+  const data = w.deck?.deckData
+  const fromData = typeof data?.name === 'string' ? data.name : ''
+  // The deck dropdown in the constructor shows the loaded deck's name.
+  const shown = (document.querySelector('#deck_constructor .decklist_cb, #deck_constructor select') as HTMLSelectElement | null)?.value ?? ''
+  return (fromData || shown || '').trim()
+}
+
+let last = ''
+function snapshot() {
+  let deck: DbDeck | null = null
+  try {
+    if (w.currentLabel === 'deck_constructor')
+      deck = {
+        main: list(w.deck_filled_arr),
+        extra: list(w.extra_filled_arr),
+        side: list(w.side_filled_arr),
+        name: deckName(),
+        id: String(w.currentDeckId ?? ''),
+      }
+  } catch {
+    deck = null
+  }
+  const sig = JSON.stringify(deck)
+  if (sig === last) return
+  last = sig
+  window.postMessage({ costDown: 'duelingbook', deck }, location.origin)
+}
+
+setInterval(snapshot, 500)

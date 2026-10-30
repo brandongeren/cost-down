@@ -36,6 +36,9 @@ button:disabled { opacity: .5; cursor: default; }
 .own { display: inline-flex; align-items: center; gap: 2px; color: #6b737a; font-size: 11px; }
 .own button { padding: 0 6px; border-radius: 5px; line-height: 18px; }
 .own .n { min-width: 14px; text-align: center; font-weight: 700; color: #1c2024; }
+:host([data-narrow]) .line { grid-template-columns: 18px 1fr auto 52px; gap: 4px; }
+:host([data-narrow]) .own .lbl { display: none; }
+:host([data-narrow]) .body, :host([data-narrow]) .head, :host([data-narrow]) .foot { padding-left: 7px; padding-right: 7px; }
 .foot { padding: 8px 10px; background: #fff; border-top: 1px solid #e3e6e9; display: flex; flex-wrap: wrap; gap: 6px;
   align-items: center; }
 .note { color: #6b737a; font-size: 11px; width: 100%; }

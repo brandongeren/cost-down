@@ -29,7 +29,9 @@ Then click the Cost Down icon in the toolbar.
   ...).
 - **Neuron / Konami deck pages** (`db.yugioh-card.com`, where Neuron share links open): the deck's TCGplayer price
   appears next to "Total in Main / Extra / Side Deck", each card row shows its price, and the Cost Down panel (bottom
-  right) has the owned counts and buttons. Duelingbook and Fuwa Lab come next.
+  right) has the owned counts and buttons.
+- **Duelingbook** deck constructor: the deck's price appears next to the card counters on the left, with the Cost Down
+  panel under it. (Firefox: if the popup shows "Allow on deck sites" again, click it; each new site needs it once.)
 - **Neuron deck editor** (signed in, editing a deck): prices follow your edits, and a **Cost Down box** above the deck
   counters fills the whole deck from a pasted `ydke://` code. It replaces every card and saves nothing; check the
   deck, then press Konami's **Save**.

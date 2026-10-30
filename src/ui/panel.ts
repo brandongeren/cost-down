@@ -168,7 +168,7 @@ export class DeckPanel {
     return h(
       'span',
       { class: 'own', title: 'Copies you own (for every deck)' },
-      'own',
+      h('span', { class: 'lbl' }, 'own'),
       h('button', { disabled: !n, onclick: () => void setOwnedCount(id, n - 1) }, '−'),
       h('span', { class: 'n' }, String(n)),
       h('button', { onclick: () => void setOwnedCount(id, n + 1) }, '+'),

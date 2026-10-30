@@ -88,7 +88,7 @@ big combined order.
 |---|---|---|
 | 1 | Skeleton: Chrome + Firefox builds, price download, panel, Mass Entry button, order list; a popup where you paste a .ydk / ydke:// list to test it all without a site | built 2026-10-30 |
 | 2 | Neuron / Konami deck pages | built 2026-10-30 (deck pages and the logged-in builder) |
-| 3 | Duelingbook deck constructor | planned |
+| 3 | Duelingbook deck constructor | built 2026-10-30; a signed-in check with a saved deck is the user's |
 | 4 | Fuwa Lab | planned |
 | 5 | Sharing it: store listings or a signed Firefox file + Chrome unpacked | planned |
 
@@ -136,6 +136,20 @@ big combined order.
   guessed.
 - Row prices in the editor sit on a small line under the card name (the name boxes are too narrow to share).
 
+### Phase 3 as built (2026-10-30): Duelingbook
+
+- Duelingbook is one page (`www.duelingbook.com`) driven by its own `main.js`; the deck isn't in the DOM. A page-world
+  script (`src/sites/duelingbook-page.ts`, manifest `world: "MAIN"`, Chrome 111+ / Firefox 128+) reads the app's
+  variables twice a second and posts the deck (passcodes) to the content script (`src/sites/duelingbook.ts`) when it
+  changes: `currentLabel === "deck_constructor"`; `deck_filled_arr` / `extra_filled_arr` / `side_filled_arr` hold
+  jQuery card elements whose `.data('id')` is Duelingbook's card id; `getCard(id).serial_number` is the passcode.
+  It only reads.
+- On the page: a "$x TCGplayer" badge left of the counters column (total / effect / spell / trap), and the panel in
+  the empty left column between the counters and the Import / Export buttons (compact layout when narrow).
+- Order-list key `duelingbook:<currentDeckId>`; the name is the loaded deck's (`deck.deckData.name`, else the deck
+  dropdown), else "Duelingbook deck".
+- Duelingbook's own Import Deck takes ydke codes already, so there's no Cost Down filler there.
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -170,10 +184,16 @@ big combined order.
   table on Save** (spells and traps put in the Monster table, before frame types were live, came back correct). So the
   frame-type split is for a correct view before saving, not something Save depends on.
 
+- 2026-10-30: Duelingbook, signed out, in Chromium: the constructor opens without an account; a deck put on screen
+  with the app's own functions (`newCardFront().initializeAndLimit(card)`, `addCardToMain/Extra/Side`) priced
+  ($2.48 for 9 cards), followed an added card ($2.62), and the badge and panel went away on leaving the constructor.
+  Its Import Deck asks for a new deck name first (a saved deck, needs an account), so it wasn't used for testing.
+
 ## 8. Still open
 
 - Fuwa Lab: how it holds the deck.
-- Duelingbook: how to read the deck the constructor is editing (page DOM vs its own data).
+- Duelingbook signed in: a saved deck's name shows in the panel (where `deck.deckData` keeps it is a guess), and the
+  order-list key stays the same across reloads.
 - Neuron / Konami builder: does the total follow live edits (adding/removing a card without reloading)?
 - Mass Entry URL length limit (§5).
 - How Mascis installs it (see phase 5); a Chrome Web Store listing costs a one-time $5.

@@ -23,6 +23,10 @@ export interface SiteAdapter {
   decorate?(priced: PricedDeck | undefined, panel: DeckPanel, index: PriceIndex): void
   /** Element whose changes mean the deck may have changed (default: document.body). */
   watch?(): Element | null
+  /** For sites that report deck changes themselves (e.g. a page-world script): call cb when the deck may have changed. */
+  subscribe?(cb: () => void): void
+  /** Positions the panel's host element (default: fixed, bottom right). Called after every render. */
+  placePanel?(host: HTMLElement): void
 }
 
 const PANEL_CSS = `${STYLES}
@@ -40,7 +44,10 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
     collapsible: true,
     startCollapsed: true,
     onClose: () => host.remove(),
-    onPriced: (priced) => index && adapter.decorate?.(priced, panel, index),
+    onPriced: (priced) => {
+      if (index) adapter.decorate?.(priced, panel, index)
+      adapter.placePanel?.(host)
+    },
   })
   shadow(host, PANEL_CSS).append(panel.el)
 
@@ -77,6 +84,7 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
   }).observe(adapter.watch?.() ?? document.body, { childList: true, subtree: true, characterData: true })
   document.addEventListener('change', later, true)
   document.addEventListener('input', later, true)
+  adapter.subscribe?.(later)
 }
 
 const isOurs = (n: Node) => n instanceof Element && n.hasAttribute(MARK)
