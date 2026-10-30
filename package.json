@@ -7,7 +7,9 @@
     "build": "tsx scripts/build.ts",
     "watch": "tsx scripts/build.ts --watch",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "package": "npm run build && web-ext build -s dist/chrome -a dist/packages -n cost-down-chrome-{version}.zip -o && web-ext build -s dist/firefox -a dist/packages -n cost-down-firefox-{version}.zip -o",
+    "lint:firefox": "web-ext lint -s dist/firefox"
   },
   "engines": {
     "node": ">=20.19"
@@ -18,6 +20,7 @@
     "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.12"
+    "vitest": "^4.1.12",
+    "web-ext": "^10.8.0"
   }
 }

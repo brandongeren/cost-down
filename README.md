@@ -48,6 +48,15 @@ TCGplayer market prices (USD), the cheapest printing of each card, from [TCGCSV]
 extension downloads that one file at most once a day and calls nothing else: no TCGplayer, TCGCSV or YGOPRODeck APIs.
 Nothing you do is sent anywhere; owned counts and the order list stay in your browser.
 
+## Packaging
+
+```bash
+npm run package      # dist/packages/cost-down-chrome-<version>.zip and cost-down-firefox-<version>.zip
+```
+
+The Chrome zip can be uploaded to the Chrome Web Store, or unzipped and loaded unpacked. Firefox only installs
+permanently from a Mozilla-signed file (see DESIGN.md §6 phase 5).
+
 ## Development
 
 ```bash
