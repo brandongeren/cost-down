@@ -17,6 +17,8 @@ export interface PriceCard {
   kid?: number
   /** Alternate-artwork passcodes. */
   alt?: number[]
+  /** YGOPRODeck frame type ("effect", "spell", "trap", "fusion", ...); added 2026-10-30, so older files lack it. */
+  f?: string
 }
 
 export interface PriceFile {

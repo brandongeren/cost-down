@@ -64,13 +64,19 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
   }
   refresh()
 
-  // Re-read after the page edits the deck; ignore mutations Cost Down made itself.
+  // Re-read after the page edits the deck; ignore mutations Cost Down made itself. Form fields changing value don't
+  // show up as mutations, so changes to inputs count too.
   let timer: number | undefined
-  new MutationObserver((records) => {
-    if (records.every((r) => (r.target as Element).closest?.(`[${MARK}]`) || [...r.addedNodes].every(isOurs))) return
+  const later = () => {
     clearTimeout(timer)
     timer = window.setTimeout(refresh, 250)
+  }
+  new MutationObserver((records) => {
+    if (records.every((r) => (r.target as Element).closest?.(`[${MARK}]`) || [...r.addedNodes].every(isOurs))) return
+    later()
   }).observe(adapter.watch?.() ?? document.body, { childList: true, subtree: true, characterData: true })
+  document.addEventListener('change', later, true)
+  document.addEventListener('input', later, true)
 }
 
 const isOurs = (n: Node) => n instanceof Element && n.hasAttribute(MARK)

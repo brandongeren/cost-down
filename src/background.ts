@@ -10,7 +10,9 @@ let inFlight: Promise<void> | undefined
 
 async function refresh(): Promise<void> {
   const stored = (await chrome.storage.local.get('prices')).prices as StoredPrices | undefined
-  if (stored && Date.now() - stored.fetchedAt < MAX_AGE_MS) return
+  // Files from before frame types were added (2026-10-30) are refetched within the hour: the Konami deck filler needs them.
+  const current = !!stored && 'f' in (stored.file.cards[0] ?? {})
+  if (stored && Date.now() - stored.fetchedAt < (current ? MAX_AGE_MS : 60 * 60 * 1000)) return
   const res = await fetch(PRICE_URL, { cache: 'no-cache' })
   if (!res.ok) throw new Error(`Price download failed: ${res.status}`)
   const file = (await res.json()) as PriceFile

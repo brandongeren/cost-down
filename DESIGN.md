@@ -119,6 +119,23 @@ big combined order.
   List views. The Gallery view has none (the panel lists everything).
 - Order-list key `konami:<cgid>:<dno>`, so the language or view in the URL doesn't make a second copy.
 
+### Neuron deck editor: prices and "Fill deck" from a ydke code (2026-10-30, user request)
+
+- The signed-in editor (`member_deck.action?ope=2`) is read from its own slots, so the total follows edits live
+  (Cost Down also re-reads on every input/change event; value changes aren't DOM mutations).
+- How the editor works was learned from a recording the user made in their own signed-in Chrome (DevTools, sanitized
+  HAR, no cookies) while adding cards and saving, because Konami's sign-in returned 403 in the automated recorder
+  window. Slots: 65 Monster / Spell / Trap rows, 20 Extra, 20 Side; each has a name, a count `.cnum` ("0" empty, 1-3),
+  a hidden Konami id and an artwork value (`<id>_1_1_1`, or `null_null_null_null` when empty). Save posts the whole
+  form (plus the page's `ytkn` token); the server goes by the ids.
+- A **Cost Down box above the deck counters** takes a ydke:// code (or .ydk / text list) and **replaces every slot**:
+  Main cards go to Monster / Spell / Trap by frame type (`f`, added to `cost-down.json` 2026-10-30), Extra and Side by
+  section; one row per card, up to 3 copies; default artwork. It then fires the page's own count-change handler so
+  Konami's totals update. It asks before replacing a non-empty deck, and **never saves**: the user checks and presses
+  Konami's Save. Cards with no Konami id, more than 3 copies or more distinct cards than rows are reported, not
+  guessed.
+- Row prices in the editor sit on a small line under the card name (the name boxes are too narrow to share).
+
 ## 7. Verified facts
 
 - 2026-10-30: Chaos Catalog's live data is at `/chaos-catalog/data/ygo/` (`meta.json` lists the price days; 14,645
@@ -144,6 +161,11 @@ big combined order.
   access at install, so content scripts don't run until it's allowed; the popup shows "Allow on deck sites"
   (`chrome.permissions.request`) when it's missing, and that fixed it.
 - 2026-10-30: the logged-in Konami deck builder (edit page) shows the prices too (checked by the user in Firefox).
+
+- 2026-10-30: editor filler, tested on the user's recorded editor page served in place of the live one (saves
+  blocked): a 9/1/2 ydke code filled Main, Extra and Side with the right names, counts, ids and artwork values, and
+  Konami's own totals updated (9 / 1 / 2). Monster/Spell/Trap split checked once `cost-down.json` has frame types.
+  Not yet saved on the real site.
 
 ## 8. Still open
 

@@ -30,6 +30,9 @@ Then click the Cost Down icon in the toolbar.
 - **Neuron / Konami deck pages** (`db.yugioh-card.com`, where Neuron share links open): the deck's TCGplayer price
   appears next to "Total in Main / Extra / Side Deck", each card row shows its price, and the Cost Down panel (bottom
   right) has the owned counts and buttons. Duelingbook and Fuwa Lab come next.
+- **Neuron deck editor** (signed in, editing a deck): prices follow your edits, and a **Cost Down box** above the deck
+  counters fills the whole deck from a pasted `ydke://` code. It replaces every card and saves nothing; check the
+  deck, then press Konami's **Save**.
 - **own −/+** on a card: copies you own. They're remembered for every deck and taken off the price and the order.
 - **TCGplayer Mass Entry:** opens TCGplayer's Mass Entry with what you still need. Check the printing and condition
   options there, then **Add to Cart**.
