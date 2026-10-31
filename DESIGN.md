@@ -39,7 +39,7 @@ Goals
 - A price panel on the page: total, per-line prices, "I own N" per card, with the total updating as you edit.
   Main, extra **and side** deck all count (user decision 2026-10-30).
 - One button: open TCGplayer Mass Entry in a new tab with what you still need.
-- An **order list**: add several decks, and Mass Entry gets one combined list (quantities summed, minus what you
+- A **multi-deck order list** (renamed from "order list" 2026-10-30, user request): add several decks, and Mass Entry gets one combined list (quantities summed, minus what you
   own) for a single order (user request 2026-10-30; Mascis builds many decks and buys once).
 - One codebase for Chrome and Firefox.
 
@@ -207,6 +207,13 @@ big combined order.
   permission) and stores `theme` {bg, text, border, surface} from the theme's popup / toolbar colors; every Cost Down
   shadow root and the popup apply them over light/dark, and follow `theme.onUpdated`. Chrome has no theme API for
   extensions, so Chrome follows light/dark only.
+
+### Multi-deck order list view (2026-10-30, user request)
+
+- Renamed from "order list" (button "Add to multi-deck order list", popup tab "Multi-deck order list").
+- The popup shows **Decks** (each opens with ▸ to list its own cards and prices) and **What you'll buy**: every card
+  once, copies to buy, price, and where they come from ("Snake-Eye ×3 · Yubel ×3 · you own 3"). Cards fully covered
+  by what you own stay listed, greyed, "covered by what you own", instead of disappearing. Most expensive first.
 
 ## 7. Verified facts
 

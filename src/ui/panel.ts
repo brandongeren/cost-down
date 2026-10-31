@@ -1,5 +1,5 @@
 // The price panel: Limitless-style deck pricing (DESIGN.md §1). The header has the card count and total; each line
-// has its price, and "own" counts that take copies off the order. Buttons: TCGplayer Mass Entry, add to order list.
+// has its price, and "own" counts that take copies off the order. Buttons: TCGplayer Mass Entry, add to multi-deck order list.
 
 import { SECTION_LABEL, SECTIONS, deckSize, type RawDeck } from '../core/deck.ts'
 import { massEntryUrl } from '../core/massentry.ts'
@@ -150,10 +150,10 @@ export class DeckPanel {
         h(
           'button',
           {
-            title: 'Add this deck to the order list, to buy several decks in one Mass Entry',
+            title: 'Save this deck to buy later together with other decks, in one Mass Entry',
             onclick: () => void addToOrder({ key: current.key, name: current.name, deck: current.deck, source: current.source }),
           },
-          inOrder ? 'Update in order list' : 'Add to order list',
+          inOrder ? 'Update in multi-deck order list' : 'Add to multi-deck order list',
         ),
         h(
           'div',

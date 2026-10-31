@@ -1,7 +1,7 @@
 # Cost Down
 
 A Chrome and Firefox extension for Yu-Gi-Oh! deck building: see what a deck costs on TCGplayer, mark the cards you
-already own, and send the rest to TCGplayer Mass Entry in one click. Several decks can go on an order list and be
+already own, and send the rest to TCGplayer Mass Entry in one click. Several decks can go on a multi-deck order list and be
 bought in one Mass Entry.
 
 Named after the card [Cost Down](https://ygoprodeck.com/card/cost-down-5575) (its artwork is the icon).
@@ -46,7 +46,8 @@ Then click the Cost Down icon in the toolbar.
   button.
 - **TCGplayer Mass Entry:** opens TCGplayer's Mass Entry with what you still need. Check the printing and condition
   options there, then **Add to Cart**.
-- **Order list:** **Add to order list** on any deck, then the **Order list** tab sends every deck at once (owned copies
+- **Multi-deck order list:** **Add to multi-deck order list** on any deck, then the popup's **Multi-deck order list**
+  tab sends every deck at once (owned copies
   count once for the whole order).
 
 Cost Down follows your browser's light / dark setting, and in Firefox the colors of the theme you've applied.

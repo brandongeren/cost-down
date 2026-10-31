@@ -13,7 +13,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; font: 12px ui-mono
 .row { display: flex; gap: 6px; margin: 6px 0 8px; }
 .row input { flex: 1; font: inherit; color: inherit; background: var(--p-input); border: 1px solid var(--p-border); border-radius: 7px; padding: 4px 8px; }
 .file { border: 1px solid var(--p-border); background: var(--p-tab); border-radius: 7px; padding: 4px 9px; cursor: pointer; white-space: nowrap; }
-#panel, #orderlist { max-height: 430px; display: block; }
+#panel, #orderlist { max-height: 470px; display: block; }
 #perm { margin: 8px; padding: 8px; border-radius: 8px; background: var(--p-warn-bg); border: 1px solid var(--p-warn-border); }
 #perm button { display: block; margin-top: 6px; font: inherit; font-weight: 700; color: #fff; background: #1a9b7e; border: none; border-radius: 7px; padding: 5px 10px; cursor: pointer; }
 #showpanel { margin: 8px 8px 0; }

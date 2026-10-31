@@ -27,7 +27,7 @@ function popupTheme(t: Record<string, string | null> | null | undefined) {
 const panel = new DeckPanel()
 shadow($('panel'), STYLES).append(panel.el)
 
-// A pasted deck gets one key per paste session, so "Update in order list" replaces it rather than adding twice.
+// A pasted deck gets one key per paste session, so "Update in multi-deck order list" replaces it rather than adding twice.
 const pasteKey = `paste:${crypto.randomUUID()}`
 
 // Firefox doesn't grant an add-on's website access at install (Chrome does), so content scripts don't run until

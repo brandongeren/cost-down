@@ -16,7 +16,7 @@ Pokémon.
 • Mark the copies you already own: the total drops to what you still need to buy, and your owned counts carry over
   to every deck.
 • One click opens TCGplayer Mass Entry with exactly the cards you still need.
-• Order list: add several decks and buy them all in one Mass Entry (cards you own count once for the whole order).
+• Multi-deck order list: add several decks and buy them all in one Mass Entry (cards you own count once for the whole order).
 • Works on Yu-Gi-Oh! Neuron / the Konami card database (deck pages and the deck editor), Duelingbook's deck
   constructor and Fuwa Lab, and with any ydke:// code, .ydk file or text list pasted into the toolbar popup.
 • On the Neuron deck editor, paste a ydke:// code to fill the whole deck; you check it and press Save yourself.

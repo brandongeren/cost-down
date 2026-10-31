@@ -60,8 +60,23 @@ button:disabled { opacity: .5; cursor: default; }
 .note { color: var(--cd-muted); font-size: 11px; width: 100%; }
 .warn { color: var(--cd-warn); font-size: 11px; margin: 4px 0; }
 .empty { color: var(--cd-muted); padding: 14px 4px; text-align: center; }
-.deckrow { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; padding: 5px 4px;
+.sub { margin: 8px 0 3px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--cd-muted); }
+.deckrow { display: grid; grid-template-columns: auto 1fr auto auto; gap: 6px; align-items: center; padding: 5px 2px;
   border-bottom: 1px solid var(--cd-line); }
+.deckcards { margin: 0 0 6px 26px; padding: 2px 0; border-left: 2px solid var(--cd-line); }
+.mini { display: grid; grid-template-columns: 22px 1fr auto 56px; gap: 6px; padding: 1px 6px; font-size: 12px; }
+.mini .qty { font-weight: 700; text-align: right; }
+.mini .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini .sec { color: var(--cd-muted); font-size: 11px; }
+.mini .price { text-align: right; color: var(--cd-price); font-variant-numeric: tabular-nums; }
+.buy { display: grid; grid-template-columns: 26px 1fr 64px; gap: 6px; align-items: start; padding: 4px 4px;
+  border-bottom: 1px solid var(--cd-line); }
+.buy .qty { font-weight: 700; text-align: right; }
+.buy .name { min-width: 0; }
+.buy .name > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.buy .meta { color: var(--cd-muted); font-size: 11px; }
+.buy .price { text-align: right; color: var(--cd-price); font-variant-numeric: tabular-nums; }
+.buy.done .qty, .buy.done .name > span, .buy.done .price { color: var(--cd-faint); }
 .deckrow .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .deckrow .meta { color: var(--cd-muted); font-size: 11px; }
 .deckrow .price { color: var(--cd-price); font-weight: 700; }
