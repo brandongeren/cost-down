@@ -104,6 +104,7 @@ export class DeckPanel {
       const copies = new Map<number, number>()
       for (const l of priced.lines) copies.set(l.id, (copies.get(l.id) ?? 0) + l.qty)
       body.append(
+        h('div', { class: 'hint' }, 'Enter how many copies of each card you own; the rest can be added to your cart.'),
         h(
           'div',
           { class: 'bulk' },

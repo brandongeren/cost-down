@@ -37,6 +37,8 @@ button.primary:hover { background: var(--cd-accent-hover); }
 button.link { background: none; border: none; padding: 2px 4px; color: var(--cd-muted); }
 button:disabled { opacity: .5; cursor: default; }
 .body { overflow-y: auto; padding: 6px 10px; flex: 1; min-height: 0; }
+.hint { margin: 2px 0 6px; padding: 5px 8px; border-radius: 6px; background: var(--cd-section); color: var(--cd-text);
+  font-size: 12px; line-height: 1.35; }
 .bulk { display: flex; gap: 6px; margin: 2px 0 4px; }
 .bulk button { flex: 1; padding: 3px 6px; font-size: 12px; }
 .section { margin: 6px 0 10px; }

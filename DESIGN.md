@@ -198,7 +198,9 @@ big combined order.
   passcode (`.data('serial_number')`), which works there too; deck link pages don't load the full card list.
 - Owned counts: **None − n + All** per line; None sets the count to 0, All to every copy of that card in the loaded
   deck (all sections). Above the list, **Add all to order** (None for every card in the deck) and **Remove all from
-  order** (owned raised to the deck's copies for every card; never lowered) (2026-10-30, user request). The card list keeps its scroll position when the panel redraws (it used to jump to the top on +/−).
+  order** (owned raised to the deck's copies for every card; never lowered) (2026-10-30, user request).
+- The card list starts with the instruction "Enter how many copies of each card you own; the rest can be added to your
+  cart." (the number on each line is copies owned, not copies to buy; user request 2026-10-30). The card list keeps its scroll position when the panel redraws (it used to jump to the top on +/−).
 
 ### Light / dark and browser themes (2026-10-30, user request)
 
