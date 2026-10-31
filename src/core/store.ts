@@ -34,6 +34,16 @@ export async function setOwnedCount(id: number, count: number): Promise<void> {
   await chrome.storage.local.set({ owned })
 }
 
+/** Sets several owned counts at once (one storage write, so the panel redraws once). */
+export async function setOwnedCounts(counts: Record<number, number>): Promise<void> {
+  const owned = await getOwned()
+  for (const [id, n] of Object.entries(counts)) {
+    if (n > 0) owned[Number(id)] = n
+    else delete owned[Number(id)]
+  }
+  await chrome.storage.local.set({ owned })
+}
+
 export async function getOrder(): Promise<OrderDeck[]> {
   return ((await chrome.storage.local.get('order')).order as OrderDeck[] | undefined) ?? []
 }

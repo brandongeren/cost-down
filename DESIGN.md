@@ -196,8 +196,9 @@ big combined order.
 - Nothing shows on a site's pages until a deck is on screen (Duelingbook: only in the deck constructor, and on deck
   link pages `/deck?id=`, which use the same deck screen; the id comes from the link). Card elements carry their
   passcode (`.data('serial_number')`), which works there too; deck link pages don't load the full card list.
-- Owned counts: **− n + All** per line; All sets the count to every copy of that card in the loaded deck (all
-  sections). The card list keeps its scroll position when the panel redraws (it used to jump to the top on +/−).
+- Owned counts: **None − n + All** per line; None sets the count to 0, All to every copy of that card in the loaded
+  deck (all sections). Above the list, **Add all to order** (None for every card in the deck) and **Remove all from
+  order** (owned raised to the deck's copies for every card; never lowered) (2026-10-30, user request). The card list keeps its scroll position when the panel redraws (it used to jump to the top on +/−).
 
 ### Light / dark and browser themes (2026-10-30, user request)
 

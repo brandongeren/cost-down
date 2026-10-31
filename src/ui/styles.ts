@@ -37,6 +37,8 @@ button.primary:hover { background: var(--cd-accent-hover); }
 button.link { background: none; border: none; padding: 2px 4px; color: var(--cd-muted); }
 button:disabled { opacity: .5; cursor: default; }
 .body { overflow-y: auto; padding: 6px 10px; flex: 1; min-height: 0; }
+.bulk { display: flex; gap: 6px; margin: 2px 0 4px; }
+.bulk button { flex: 1; padding: 3px 6px; font-size: 12px; }
 .section { margin: 6px 0 10px; }
 .section h3 { margin: 0 0 4px; font-size: 12px; font-weight: 700; background: var(--cd-section); border-radius: 6px; padding: 4px 8px;
   display: flex; justify-content: space-between; }
@@ -52,7 +54,8 @@ button:disabled { opacity: .5; cursor: default; }
 .own button { padding: 0 6px; border-radius: 5px; line-height: 18px; }
 .own .n { min-width: 14px; text-align: center; font-weight: 700; color: var(--cd-text); }
 .own button.all { padding: 0 4px; font-size: 10px; font-weight: 700; }
-:host([data-narrow]) .line { grid-template-columns: 18px 1fr auto 48px; gap: 3px; }
+:host([data-narrow]) .line { grid-template-columns: 16px 1fr auto 46px; gap: 3px; }
+:host([data-narrow]) .bulk button { font-size: 11px; padding: 3px 3px; }
 :host([data-narrow]) .own .lbl { display: none; }
 :host([data-narrow]) .body, :host([data-narrow]) .head, :host([data-narrow]) .foot { padding-left: 7px; padding-right: 7px; }
 .foot { padding: 8px 10px; background: var(--cd-surface); border-top: 1px solid var(--cd-line); display: flex; flex-wrap: wrap; gap: 6px;

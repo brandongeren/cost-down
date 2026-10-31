@@ -4,7 +4,7 @@
 import { SECTION_LABEL, SECTIONS, deckSize, type RawDeck } from '../core/deck.ts'
 import { massEntryUrl } from '../core/massentry.ts'
 import { money, priceDeck, shoppingList, type Owned, type PricedDeck, type PriceIndex } from '../core/prices.ts'
-import { addToOrder, getOrder, getOwned, onStoreChange, setOwnedCount, type OrderDeck } from '../core/store.ts'
+import { addToOrder, getOrder, getOwned, onStoreChange, setOwnedCount, setOwnedCounts, type OrderDeck } from '../core/store.ts'
 import { append, h, logo, openTab } from './dom.ts'
 
 export interface PanelDeck {
@@ -100,6 +100,34 @@ export class DeckPanel {
 
     if (!this.collapsed) {
       const body = h('div', { class: 'body' })
+      // Bulk versions of None / All: what's "in the order" is every copy you don't own.
+      const copies = new Map<number, number>()
+      for (const l of priced.lines) copies.set(l.id, (copies.get(l.id) ?? 0) + l.qty)
+      body.append(
+        h(
+          'div',
+          { class: 'bulk' },
+          h(
+            'button',
+            {
+              disabled: priced.needCards === priced.cards - priced.unknown.length,
+              title: 'Buy every card in this deck (owned counts for these cards go to 0)',
+              onclick: () => void setOwnedCounts(Object.fromEntries([...copies.keys()].map((id) => [id, 0]))),
+            },
+            'Add all to order',
+          ),
+          h(
+            'button',
+            {
+              disabled: priced.needCards === 0,
+              title: "You own every card in this deck (owned counts go up to this deck's copies)",
+              onclick: () =>
+                void setOwnedCounts(Object.fromEntries([...copies].map(([id, n]) => [id, Math.max(n, this.owned[id] ?? 0)]))),
+            },
+            'Remove all from order',
+          ),
+        ),
+      )
       for (const s of SECTIONS) {
         const lines = priced.lines.filter((l) => l.section === s)
         if (!lines.length) continue
@@ -174,13 +202,14 @@ export class DeckPanel {
     this.render()
   }
 
-  /** own − n + All: copies you own (for every deck); All = every copy of this card in this deck (all sections). */
+  /** own None − n + All: copies you own (for every deck); None = 0, All = every copy of this card in this deck. */
   private ownControl(id: number, inDeck: number) {
     const n = this.owned[id] ?? 0
     return h(
       'span',
       { class: 'own', title: 'Copies you own (for every deck)' },
       h('span', { class: 'lbl' }, 'own'),
+      h('button', { class: 'all', disabled: !n, title: "I own none (buy them all)", onclick: () => void setOwnedCount(id, 0) }, 'None'),
       h('button', { disabled: !n, onclick: () => void setOwnedCount(id, n - 1) }, '−'),
       h('span', { class: 'n' }, String(n)),
       h('button', { onclick: () => void setOwnedCount(id, n + 1) }, '+'),
