@@ -4,6 +4,7 @@
 //   order   the order list: decks to buy together in one Mass Entry
 //   panelHidden  the popup's "Keep the panel hidden until I open it" switch
 //   panelPos     where the user dragged the on-page panel, per site
+//   reopenPos    where the user dragged the round reopen button, per site
 
 import type { RawDeck } from './deck.ts'
 import { PriceIndex, type Owned, type PriceFile } from './prices.ts'

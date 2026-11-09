@@ -39,7 +39,7 @@ const PANEL_CSS = `${STYLES}
 // bottom-right corner, where sites keep their own buttons (Konami's back-to-top).
 const REOPEN_CSS = `
 :host { all: initial; position: fixed; right: 16px; bottom: 76px; z-index: 2147483000; }
-button { width: 38px; height: 38px; padding: 3px; border-radius: 50%; border: 2px solid #1a9b7e; background: #fff;
+button { width: 38px; height: 38px; padding: 3px; border-radius: 50%; touch-action: none; user-select: none; border: 2px solid #1a9b7e; background: #fff;
   box-shadow: 0 3px 12px rgba(0,0,0,.3); cursor: pointer; display: grid; place-items: center; }
 button:hover { transform: scale(1.08); }
 .logo { width: 28px; height: 28px; border-radius: 50%; display: block; }
@@ -47,6 +47,13 @@ button:hover { transform: scale(1.08); }
 
 /** Marks elements Cost Down added to the page, so decorate() can find and replace its own work. */
 export const MARK = 'data-cost-down'
+/** Extra mark for on-page totals that aren't [MARK="total"] (Fuwa Lab's per-section totals). */
+export const TOTAL = 'data-cost-down-total'
+
+/** On-page totals ("$x still to buy") show only while the panel is open with its card list showing. */
+function showTotals(on: boolean) {
+  for (const el of document.querySelectorAll<HTMLElement>(`[${MARK}="total"], [${TOTAL}]`)) el.style.display = on ? '' : 'none'
+}
 
 export async function runSite(adapter: SiteAdapter): Promise<void> {
   let index: PriceIndex | undefined
@@ -60,6 +67,7 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
   const show = () => {
     host.style.display = hasDeck && !closed ? '' : 'none'
     reopenHost.style.display = hasDeck && closed ? '' : 'none'
+    showTotals(!closed && !panel.isCollapsed)
   }
   // Turning the switch on hides an open panel right away; turning it off leaves things as they are.
   chrome.storage.onChanged.addListener((changes, area) => {
@@ -73,7 +81,9 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
     panel.expand()
   }
   // Where the user dragged the panel on this site (kept in storage.local per hostname); undefined = the site's default.
-  let userPos = await savedPosition()
+  let userPos = await savedPosition('panelPos')
+  // Where the user dragged the round reopen button; it then stays there instead of following the panel.
+  let reopenPos = await savedPosition('reopenPos')
   const applyUserPos = () => {
     if (!userPos) return false
     const r = host.getBoundingClientRect()
@@ -83,7 +93,11 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
     return true
   }
   const placeReopen = () => {
-    if (host.style.left) Object.assign(reopenHost.style, { left: host.style.left, top: host.style.top, right: 'auto', bottom: 'auto' })
+    if (reopenPos) {
+      const left = Math.min(Math.max(0, reopenPos.left), window.innerWidth - 40)
+      const top = Math.min(Math.max(0, reopenPos.top), window.innerHeight - 40)
+      Object.assign(reopenHost.style, { left: `${left}px`, top: `${top}px`, right: 'auto', bottom: 'auto' })
+    } else if (host.style.left) Object.assign(reopenHost.style, { left: host.style.left, top: host.style.top, right: 'auto', bottom: 'auto' })
   }
   const panel: DeckPanel = new DeckPanel({
     collapsible: true,
@@ -98,6 +112,7 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
     },
     onPriced: (priced) => {
       if (index) adapter.decorate?.(priced, panel, index)
+      showTotals(!closed && !panel.isCollapsed)
       if (!applyUserPos()) adapter.placePanel?.(host)
       // The reopen button sits where the panel's top-left corner is, once the panel has been placed or dragged.
       placeReopen()
@@ -108,19 +123,27 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
     moved: (pos) => {
       userPos = pos
       placeReopen()
-      void savePosition(pos)
+      void savePosition('panelPos', pos)
     },
     reset: () => {
       userPos = undefined
       Object.assign(host.style, { left: '', top: '', right: '', bottom: '' })
       Object.assign(reopenHost.style, { left: '', top: '', right: '', bottom: '' })
-      void savePosition(undefined)
+      void savePosition('panelPos', undefined)
       adapter.placePanel?.(host)
       placeReopen()
     },
   })
   window.addEventListener('resize', () => applyUserPos() && placeReopen())
-  shadow(reopenHost, REOPEN_CSS).append(h('button', { title: 'Show Cost Down', onclick: reopen }, logo()))
+  const reopenBtn = h('button', { title: 'Show Cost Down · drag to move' }, logo())
+  shadow(reopenHost, REOPEN_CSS).append(reopenBtn)
+  dragButton(reopenHost, reopenBtn, {
+    click: reopen,
+    moved: (pos) => {
+      reopenPos = pos
+      void savePosition('reopenPos', pos)
+    },
+  })
   show()
 
   // The toolbar popup's "Show the panel on this page" (and its check for whether this page has one).
@@ -172,16 +195,55 @@ export async function runSite(adapter: SiteAdapter): Promise<void> {
 
 type Pos = { left: number; top: number }
 
-async function savedPosition(): Promise<Pos | undefined> {
-  const all = ((await chrome.storage.local.get('panelPos')).panelPos ?? {}) as Record<string, Pos>
+type PosKey = 'panelPos' | 'reopenPos'
+
+async function savedPosition(key: PosKey): Promise<Pos | undefined> {
+  const all = ((await chrome.storage.local.get(key))[key] ?? {}) as Record<string, Pos>
   return all[location.hostname]
 }
 
-async function savePosition(pos: Pos | undefined): Promise<void> {
-  const all = ((await chrome.storage.local.get('panelPos')).panelPos ?? {}) as Record<string, Pos>
+async function savePosition(key: PosKey, pos: Pos | undefined): Promise<void> {
+  const all = ((await chrome.storage.local.get(key))[key] ?? {}) as Record<string, Pos>
   if (pos) all[location.hostname] = pos
   else delete all[location.hostname]
-  await chrome.storage.local.set({ panelPos: all })
+  await chrome.storage.local.set({ [key]: all })
+}
+
+/** The round reopen button: a click opens the panel; dragging it (more than a few pixels) moves it instead. */
+function dragButton(host: HTMLElement, btn: HTMLElement, on: { click: () => void; moved: (p: Pos) => void }) {
+  let dragged = false
+  btn.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    dragged = false
+    const r = host.getBoundingClientRect()
+    const dx = e.clientX - r.left
+    const dy = e.clientY - r.top
+    let pos: Pos = { left: r.left, top: r.top }
+    const move = (ev: PointerEvent) => {
+      if (!dragged && Math.hypot(ev.clientX - e.clientX, ev.clientY - e.clientY) < 5) return
+      dragged = true
+      btn.style.cursor = 'grabbing'
+      pos = {
+        left: Math.min(Math.max(0, ev.clientX - dx), window.innerWidth - r.width),
+        top: Math.min(Math.max(0, ev.clientY - dy), window.innerHeight - r.height),
+      }
+      Object.assign(host.style, { left: `${pos.left}px`, top: `${pos.top}px`, right: 'auto', bottom: 'auto' })
+    }
+    const up = () => {
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+      btn.style.cursor = ''
+      if (dragged) on.moved(pos)
+    }
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+  })
+  // A drag ends with a click event too; only a real click opens the panel.
+  btn.addEventListener('click', () => {
+    if (!dragged) on.click()
+    dragged = false
+  })
 }
 
 /** Drag the panel by its header (not its buttons); double-click the header to put it back where the site places it. */

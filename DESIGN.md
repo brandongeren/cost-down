@@ -182,17 +182,25 @@ big combined order.
 ### Closing and reopening the on-page panel (2026-10-30, user request)
 
 - × on the panel hides it for that page and leaves a small round Cost Down button (bottom right, above the corner;
-  on Duelingbook where the panel was). Clicking it, or the on-page price total, brings the panel back.
+  on Duelingbook where the panel was). Clicking it brings the panel back.
+- **On-page totals show only while the panel's card list is open** (2026-11-09, user request): minimizing (▾) or
+  closing (×) the panel hides the deck total Cost Down puts on the page (Neuron's "Still to buy / TCGplayer Price" box,
+  Duelingbook's "$x still to buy" badge, Fuwa Lab's per-section totals; `[data-cost-down="total"]` or
+  `[data-cost-down-total]`). Per-card prices stay. Since the panel starts minimized, a page first shows no total.
+  Verified 2026-11-09 on a Neuron deck page in Chromium (start, expand, minimize, close, reopen).
 - The toolbar popup shows "Show the Cost Down panel on this page" when the current tab is a supported deck page
   (it asks the tab's content script; no `tabs` permission needed).
 
 ### Moving and hiding the on-page panel (2026-10-30, user requests)
 
 - Drag the panel by its header anywhere on screen; the spot is remembered per site (`panelPos` by hostname) and
-  overrides the site's default placement; double-click the header to put it back. The reopen button follows it.
+  overrides the site's default placement; double-click the header to put it back. The reopen button follows it,
+  until the user drags the button itself (2026-11-09, user request): then it stays at its own spot (`reopenPos` by
+  hostname). A press that moves under 5 px is a click (opens the panel); more is a drag. Verified 2026-11-09 on a
+  Neuron deck page: dragged, kept its spot after a reload, a click still opened the panel.
 - Popup switch **"Keep the panel hidden until I open it"** (`panelHidden`): deck pages start with only the small
-  reopen button; it, the price on the page or the popup's "Show the Cost Down panel on this page" opens the panel.
-  On-page prices stay visible.
+  reopen button; it or the popup's "Show the Cost Down panel on this page" opens the panel.
+  Per-card prices on the page stay visible; the deck total doesn't (see above).
 - Nothing shows on a site's pages until a deck is on screen (Duelingbook: only in the deck constructor, and on deck
   link pages `/deck?id=`, which use the same deck screen; the id comes from the link). Card elements carry their
   passcode (`.data('serial_number')`), which works there too; deck link pages don't load the full card list.

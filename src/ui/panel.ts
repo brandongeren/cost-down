@@ -196,6 +196,11 @@ export class DeckPanel {
     this.opts.onPriced?.(priced)
   }
 
+  /** True while the card list is hidden (header only). */
+  get isCollapsed(): boolean {
+    return this.collapsed
+  }
+
   /** Opens the card list (site adapters call it when their on-page total is clicked). */
   expand() {
     this.collapsed = false

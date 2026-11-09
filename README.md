@@ -40,8 +40,10 @@ Then click the Cost Down icon in the toolbar.
 - **own None / − / + / All** on a card: copies you own (None = 0, All = every copy in this deck). They're remembered for
   every deck and taken off the price and the order. **Add all to order** / **Remove all from order** above the list do
   the same for every card at once.
-- **× closes the on-page panel**; the small round Cost Down button that's left (or the price on the page, or the
-  toolbar popup's "Show the Cost Down panel on this page") brings it back.
+- **× closes the on-page panel**; the small round Cost Down button that's left (or the toolbar popup's "Show the
+  Cost Down panel on this page") brings it back. Drag that button anywhere; it remembers the spot per site.
+- The deck total Cost Down adds to the page ("still to buy") shows only while the panel's card list is open;
+  minimizing or closing the panel hides it.
 - **Drag the panel** by its header wherever you like (remembered per site; double-click the header to put it back).
   The popup's **"Keep the panel hidden until I open it"** switch starts every deck page with just the small Cost Down
   button.

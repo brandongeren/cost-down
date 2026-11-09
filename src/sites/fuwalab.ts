@@ -7,7 +7,7 @@ import type { DeckSection } from '../core/deck.ts'
 import { money, type PricedDeck, type PriceIndex } from '../core/prices.ts'
 import { h } from '../ui/dom.ts'
 import { pageDeck } from './bridge.ts'
-import { MARK, pageStyle, runSite } from './common.ts'
+import { MARK, TOTAL, pageStyle, runSite } from './common.ts'
 
 const page = pageDeck('fuwalab')
 
@@ -49,6 +49,7 @@ function decorate(priced: PricedDeck | undefined, index: PriceIndex, onClick: ()
       {
         class: 'cd-fuwa-sec',
         [MARK]: 'price',
+        [TOTAL]: '',
         title: need !== full ? `TCGplayer, still to buy (whole section ${money(full)})` : 'TCGplayer market price (Cost Down)',
         onclick: onClick,
       },
