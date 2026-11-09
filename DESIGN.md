@@ -280,10 +280,9 @@ big combined order.
 
 ## 8. Still open
 
-- **Status 2026-10-30: on hold for Mascis's review** of the latest test bundle (`~/Downloads/cost-down-for-testing.zip`)
-  before any store submission. Ready to go after that: the Chrome Web Store package for the user's friend
-  (`~/Downloads/cost-down-chrome-web-store.zip`), and the Firefox submission (`npm run sign:firefox -- --listed`)
-  once the user fills `.amo-credentials.json` (created, empty).
+- **Status 2026-11-09: Firefox listed version 0.1.0 submitted** (`npm run sign:firefox -- --listed`; AMO slug `cost-down`,
+  version 6685236, awaiting Mozilla review; web-ext's approval wait timed out, which is expected). Still to do: screenshots
+  on the AMO listing (not sent by the script), and the Chrome Web Store upload under the user's friend's account.
 
 - Fuwa Lab signed in: a saved deck's key (share code) and name, and a check with the real Import of a ydke code.
 - Duelingbook signed in: a saved deck's name shows in the panel (where `deck.deckData` keeps it is a guess), and the
