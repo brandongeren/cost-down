@@ -281,8 +281,8 @@ big combined order.
 ## 8. Still open
 
 - **Status 2026-11-09: Firefox listed version 0.1.0 submitted** (`npm run sign:firefox -- --listed`; AMO slug `cost-down`,
-  version 6685236, awaiting Mozilla review; web-ext's approval wait timed out, which is expected). Still to do: screenshots
-  on the AMO listing (not sent by the script), and the Chrome Web Store upload under the user's friend's account.
+  version 6685236, awaiting Mozilla review; web-ext's approval wait timed out, which is expected). Screenshots added to the
+  AMO listing by the user (2026-11-09). Still to do: the Chrome Web Store upload under the user's friend's account.
 
 - Fuwa Lab signed in: a saved deck's key (share code) and name, and a check with the real Import of a ydke code.
 - Duelingbook signed in: a saved deck's name shows in the panel (where `deck.deckData` keeps it is a guess), and the
