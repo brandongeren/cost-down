@@ -289,7 +289,8 @@ big combined order.
 ## 8. Still open
 
 - **2026-11-09: Firefox 0.1.1 submitted too** (on-page totals hide with the panel, draggable reopen button), and a
-  Chrome Web Store bundle for 0.1.1 made (`~/Downloads/cost-down-chrome-web-store-0.1.1.zip`).
+  Chrome Web Store bundle for 0.1.1 made (`~/Downloads/cost-down-chrome-web-store-0.1.1.zip`); its instructions
+  (`HOW TO SUBMIT.txt`: which file goes where in the dashboard, then the steps) are `store/CHROME-SUBMIT.txt`.
 - **Status 2026-11-09: Firefox listed version 0.1.0 submitted** (`npm run sign:firefox -- --listed`; AMO slug `cost-down`,
   version 6685236, awaiting Mozilla review; web-ext's approval wait timed out, which is expected). Screenshots added to the
   AMO listing by the user (2026-11-09). Still to do: the Chrome Web Store upload under the user's friend's account.

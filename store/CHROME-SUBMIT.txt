@@ -1,0 +1,60 @@
+COST DOWN - HOW TO SUBMIT TO THE CHROME WEB STORE (version 0.1.1)
+
+Thanks for helping! Everything you need is in this folder. Unzip this bundle first, but NOT the
+extension zip inside it: Chrome wants that one uploaded as it is.
+
+
+WHICH FILE GOES WHERE
+
+  File                              Where it goes in the developer dashboard
+  --------------------------------  ---------------------------------------------------------------
+  cost-down-chrome-0.1.1.zip        "+ New item" upload (or Package tab -> "Upload new package")
+  LISTING.md                        Text to copy: the description (Store listing tab) and the
+                                    Privacy tab answers
+  store-icon-128.png                Store listing tab -> Graphic assets -> "Store icon"
+  screenshots/1-neuron-deck.png     Store listing tab -> Graphic assets -> "Screenshots"
+  ... through 5-fuwalab.png         (upload all 5, in number order; they're already 1280x800)
+  promo-tile-440x280.png            Store listing tab -> Graphic assets -> "Small promo tile"
+
+Leave "Marquee promo tile" and "Global promo video" empty (they're optional).
+
+
+STEPS
+
+1. Go to https://chrome.google.com/webstore/devconsole and sign in to the developer account.
+
+2. Click "+ New item" and upload cost-down-chrome-0.1.1.zip.
+   The name and the one-line summary are taken from the package, so you don't type those.
+
+3. STORE LISTING tab
+   - Description: copy the "Description" section of LISTING.md.
+   - Category: Shopping. Language: English.
+   - Graphic assets: upload the icon, the 5 screenshots and the small promo tile (table above).
+     To add a screenshot, drag the file onto the screenshots box or click it and pick the file;
+     repeat for each one. They show in the order you add them.
+   - Homepage URL and Support URL: https://github.com/brandongeren/cost-down
+   - Mature content: No.
+   - Click "Save draft".
+
+4. PRIVACY tab (all answers are in LISTING.md, "Chrome Web Store Privacy practices answers")
+   - Single purpose: paste the "Single purpose" answer.
+   - Permission justification: paste the "storage" answer for storage, and the "Host
+     permissions" answer for host permissions.
+   - Are you using remote code? No.
+   - Data usage: tick none of the data types, then tick all three certifications.
+   - Privacy policy URL: https://github.com/brandongeren/cost-down/blob/main/PRIVACY.md
+   - Click "Save draft".
+
+5. DISTRIBUTION tab
+   - Payments: Free. Visibility: Public. Regions: All regions.
+   - Click "Save draft".
+
+6. Click "Submit for review". Google usually reviews it in a few days and emails the account.
+   If the button is greyed out, the dashboard lists what's still missing (often the account's
+   contact email, which has to be verified under Account).
+
+
+LATER VERSIONS
+
+Open the same item -> Package tab -> "Upload new package" -> pick the new zip -> "Submit for review".
+The listing, images and privacy answers stay as they are.
