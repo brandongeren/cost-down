@@ -7,6 +7,8 @@ export interface PageDeck extends RawDeck {
   name: string
   /** Stable id for the order list (the site's deck id, if it has one). */
   id: string
+  /** Card names, in the same order as main / extra / side, when the site has them (Fuwa Lab). */
+  names?: { main: string[]; extra: string[]; side: string[] }
 }
 
 const TAG = 'costDown'

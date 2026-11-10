@@ -18,11 +18,18 @@ pageStyle(`
 `)
 
 void runSite({
-  read() {
+  read(index) {
     const d = page.latest()
     if (!d) return undefined
+    // Fuwa Lab's card objects are YGOPRODeck's: match by name, else YGOPRODeck's passcode, so a passcode
+    // YGOPRODeck has wrong still finds the right card (DESIGN.md §4).
+    const resolve = (ids: number[], names: string[] = []) =>
+      ids.map((id, i) => {
+        const c = (names[i] && index.byName(names[i])) || index.byYgoprodeckId(id)
+        return c ? c.id : id
+      })
     return {
-      deck: { main: d.main, extra: d.extra, side: d.side },
+      deck: { main: resolve(d.main, d.names?.main), extra: resolve(d.extra, d.names?.extra), side: resolve(d.side, d.names?.side) },
       name: d.name || 'Fuwa Lab deck',
       key: `fuwalab:${d.id || d.name || 'unsaved'}`,
     }
@@ -60,8 +67,11 @@ function decorate(priced: PricedDeck | undefined, index: PriceIndex, onClick: ()
       badge.style.order = getComputedStyle(euros).order
       euros.after(badge)
     }
+    // Fuwa Lab's cards carry YGOPRODeck's passcode; the price is the line's (the picked rarity, else the cheapest).
+    const unitOf = new Map(lines.map((l) => [l.id, l.unit]))
     for (const card of block.querySelectorAll<HTMLElement>('.dc-card[data-card-id]')) {
-      const unit = index.card(Number(card.dataset.cardId))?.p
+      const c = index.byYgoprodeckId(Number(card.dataset.cardId))
+      const unit = c && (unitOf.has(c.id) ? unitOf.get(c.id) : index.pick(c.id).unit)
       if (unit === undefined) continue
       card.querySelector('.dc-card-price')?.append(h('span', { class: 'cd-fuwa-card', [MARK]: 'price', title: 'TCGplayer (Cost Down)' }, money(unit)))
     }

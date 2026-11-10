@@ -37,6 +37,9 @@ Then click the Cost Down icon in the toolbar.
 - **Neuron deck editor** (signed in, editing a deck): prices follow your edits, and a **Cost Down box** above the deck
   counters fills the whole deck from a pasted `ydke://` code. It replaces every card and saves nothing; check the
   deck, then press Konami's **Save**.
+- **Rarity:** each card's price is its cheapest rarity on TCGplayer. The menu under a card's name picks another
+  rarity instead (Quarter Century Secret Rare, Starlight Rare, ...); the pick is remembered for every deck, and
+  TCGplayer Mass Entry gets exactly that product.
 - **own None / − / + / All** on a card: copies you own (None = 0, All = every copy in this deck). They're remembered for
   every deck and taken off the price and the order. **Add all to order** / **Remove all from order** above the list do
   the same for every card at once.

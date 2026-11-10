@@ -5,14 +5,16 @@
 
 import { deckSize } from '../core/deck.ts'
 import { massEntryUrl } from '../core/massentry.ts'
-import { combineDecks, money, priceDeck, shoppingList, type Owned, type PriceIndex } from '../core/prices.ts'
-import { getOrder, getOwned, onStoreChange, removeFromOrder, setOrder, type OrderDeck } from '../core/store.ts'
+import { combineDecks, money, priceDeck, shoppingList, type Owned, type PriceIndex, type RarityChoice } from '../core/prices.ts'
+import { getOrder, getOwned, getRarityChoice, onStoreChange, removeFromOrder, setOrder, type OrderDeck } from '../core/store.ts'
 import { h, logo, openTab } from './dom.ts'
 
 interface BuyLine {
   id: number
   name: string
   unit?: number
+  /** The rarity, when the user picked one. */
+  rarity?: string
   /** Copies across all decks. */
   qty: number
   /** Copies still to buy after what you own. */
@@ -22,14 +24,15 @@ interface BuyLine {
 }
 
 /** Every card once, across the order: copies per deck, what you own, what's left to buy. */
-function buyLines(order: OrderDeck[], index: PriceIndex, owned: Owned): BuyLine[] {
+function buyLines(order: OrderDeck[], index: PriceIndex, owned: Owned, choice: RarityChoice): BuyLine[] {
   const lines = new Map<number, BuyLine>()
   for (const o of order) {
     const perCard = new Map<number, number>()
     for (const l of priceDeck(o.deck, index).lines) perCard.set(l.id, (perCard.get(l.id) ?? 0) + l.qty)
     for (const [id, qty] of perCard) {
       const card = index.card(id)!
-      const line = lines.get(id) ?? { id, name: card.n, unit: card.p, qty: 0, need: 0, owned: 0, from: [] }
+      const { unit, option, picked } = index.pick(id, choice)
+      const line = lines.get(id) ?? { id, name: card.n, unit, rarity: picked ? option?.rarity : undefined, qty: 0, need: 0, owned: 0, from: [] }
       line.qty += qty
       line.from.push({ deck: o.name, qty })
       lines.set(id, line)
@@ -49,15 +52,15 @@ export class OrderList {
 
   constructor(private readonly index: PriceIndex) {
     onStoreChange((keys) => {
-      if (keys.includes('owned') || keys.includes('order')) void this.render()
+      if (keys.includes('owned') || keys.includes('order') || keys.includes('rarity')) void this.render()
     })
     void this.render()
   }
 
   async render() {
     const scroll = this.el.querySelector('.body')?.scrollTop ?? 0
-    const [order, owned] = await Promise.all([getOrder(), getOwned()])
-    const combined = priceDeck(combineDecks(order.map((o) => o.deck)), this.index, owned)
+    const [order, owned, choice] = await Promise.all([getOrder(), getOwned(), getRarityChoice()])
+    const combined = priceDeck(combineDecks(order.map((o) => o.deck)), this.index, owned, choice)
     const list = shoppingList(combined)
     const header = h(
       'div',
@@ -72,9 +75,9 @@ export class OrderList {
     if (!order.length) body.append(h('div', { class: 'empty' }, 'No decks yet. Use "Add to multi-deck order list" on a deck.'))
     else {
       body.append(h('h4', { class: 'sub' }, 'Decks'))
-      for (const o of order) body.append(this.deckRow(o, owned))
+      for (const o of order) body.append(this.deckRow(o, owned, choice))
       body.append(h('h4', { class: 'sub' }, "What you'll buy"))
-      for (const l of buyLines(order, this.index, owned)) body.append(buyRow(l, order.length > 1))
+      for (const l of buyLines(order, this.index, owned, choice)) body.append(buyRow(l, order.length > 1))
     }
     const foot = h(
       'div',
@@ -97,8 +100,8 @@ export class OrderList {
   }
 
   /** A deck in the order: name (link to its page), size, price; ▸ opens its own card list. */
-  private deckRow(o: OrderDeck, owned: Owned) {
-    const p = priceDeck(o.deck, this.index, owned)
+  private deckRow(o: OrderDeck, owned: Owned, choice: RarityChoice) {
+    const p = priceDeck(o.deck, this.index, owned, choice)
     const isOpen = this.open.has(o.key)
     const toggle = () => {
       if (isOpen) this.open.delete(o.key)
@@ -120,7 +123,7 @@ export class OrderList {
     )
     if (!isOpen) return row
     const cards = h('div', { class: 'deckcards' })
-    for (const l of priceDeck(o.deck, this.index).lines)
+    for (const l of priceDeck(o.deck, this.index, {}, choice).lines)
       cards.append(
         h(
           'div',
@@ -137,7 +140,9 @@ export class OrderList {
 
 /** One card in "What you'll buy": copies to buy, name, price, and where the copies come from. */
 function buyRow(l: BuyLine, manyDecks: boolean) {
-  const parts = (manyDecks ? l.from.map((f) => `${f.deck} ×${f.qty}`) : []).concat(l.owned ? [`you own ${l.owned}`] : [])
+  const parts = (l.rarity ? [l.rarity] : [])
+    .concat(manyDecks ? l.from.map((f) => `${f.deck} ×${f.qty}`) : [])
+    .concat(l.owned ? [`you own ${l.owned}`] : [])
   return h(
     'div',
     { class: `buy${l.need ? '' : ' done'}` },

@@ -74,12 +74,34 @@ plus the price `date`. 912 KB, 285 KB compressed; 14,131 of 14,645 cards priced.
 A card's price = the cheapest market price across its printings, since Mass Entry by name lets TCGplayer pick the
 listing. Shown as "estimated".
 
+**Per rarity, and exact products (2026-11-10, user request):** the file now lists, per card, each rarity's cheapest
+TCGplayer product and price (`r`, plus a `rarities` table; Chaos Catalog commit db8fd18). A card's price is its
+cheapest rarity by default (the same number as before), or the rarity the user picked in the panel's menu under the
+card name ("Cheapest: Super Rare ($1.13)", then each rarity with its price). The pick is kept per card for every deck
+(`storage.local` `rarity`), like owned counts, and also prices the order list; if a picked rarity disappears from the
+data the card falls back to its cheapest. Mass Entry gets that product's id (§5). Files without `r` (before the
+Chaos Catalog change is published) still work: no menu, name lines.
+
+**Passcodes (2026-11-10, user report):** YGOPRODeck had Theorealize and Artmage Academic Arcane Arts Acropolis
+swapped (48739627 / 74733322, the reverse of the real cards). Chaos Catalog now checks every passcode against
+Yugipedia by Konami id and sends `pw` where YGOPRODeck is wrong; a full check found that swap as the only error
+(details in Chaos Catalog's DESIGN.md §15). In the extension a card's `id` is its real passcode (`pw` when present),
+so pasted ydke / .ydk codes, Duelingbook's passcodes and the Neuron editor's "Fill deck" get the right card; Neuron
+pages use Konami ids (unaffected). Fuwa Lab's card objects come from YGOPRODeck, so they're matched by **name**,
+falling back to YGOPRODeck's passcode (`byYgoprodeckId`). Owned counts for those two cards were keyed by YGOPRODeck's
+passcode and so swap once; no one else is affected.
+
 ## 5. TCGplayer Mass Entry
 
 Open `https://www.tcgplayer.com/massentry?productline=YuGiOh&c=<lines>`, lines joined by `||`. Two line forms work
 (verified 2026-10-30): `3 Ash Blossom & Joyous Spring` (name; TCGplayer picks among all printings) and `3-184763`
-(quantity-productId; one exact printing, what Limitless sends). Cost Down sends **names**, matching its
-cheapest-printing price. Unpriced cards are still sent (TCGplayer may know them). URL length limit: to check with a
+(quantity-productId; one exact printing, what Limitless sends). Cost Down sent **names** until 2026-11-10; it
+now sends **product ids** (the chosen rarity's cheapest product), because a name line only finds listings named
+exactly that: TCGplayer names 3,694 Yu-Gi-Oh! listings with the rarity in parentheses (mostly Quarter Century and
+Rarity Collection sets), e.g. "Gaia Knight, the Force of Earth (Super Rare)", which was that card's cheapest
+printing ($1.13) and could never be reached by name. Cards with no priced product are still sent by name (TCGplayer
+may know them); both forms mix in one link (verified 2026-11-10: the list shows "2-27600" and "1 Ash Blossom & Joyous
+Spring"). URL length limit: to check with a
 big combined order.
 
 ## 6. Phases
@@ -235,6 +257,10 @@ big combined order.
   running inside the open Duelingbook page doesn't have that problem.
 
 - 2026-10-30: TCGplayer Mass Entry (YuGiOh) fills its list from `c=` with names or quantity-productId (§5).
+- 2026-11-10: rarity menu and product-id Mass Entry checked in Chromium on a public Neuron deck with the new price
+  file (served locally before it's published): 40 menus and 7 single-rarity labels; picking Quarter Century Secret
+  Rare for Diabellstar raised the total by exactly the price difference ($28.20) and stayed picked after a reload; the
+  Mass Entry link had 47 lines, all product ids.
 - 2026-10-30: Fuwa Lab is https://fuwalab.fr/en. Mascis uses Neuron both ways: share links in a browser and the deck
   builder on `db.yugioh-card.com`.
 

@@ -49,6 +49,12 @@ button:disabled { opacity: .5; cursor: default; }
 .line:last-child { border-bottom: none; }
 .line .qty { font-weight: 700; text-align: right; }
 .line .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The rarity sits on its own row under the name, as wide as the name, own and price columns. */
+.line .rarity { grid-column: 2 / -1; justify-self: start; max-width: 100%; margin-top: -2px; font: inherit; font-size: 11px;
+  color: var(--cd-muted); }
+.line select.rarity { padding: 0 2px; border: 1px solid var(--cd-border); border-radius: 5px; background: var(--cd-surface);
+  color: var(--cd-muted); cursor: pointer; }
+.line select.rarity.picked { color: var(--cd-text); border-color: var(--cd-accent); }
 .line.done .name, .line.done .qty { color: var(--cd-faint); }
 .line .price { text-align: right; color: var(--cd-price); font-variant-numeric: tabular-nums; }
 .line .price.none { color: var(--cd-faint); }

@@ -74,3 +74,46 @@ describe('mass entry', () => {
     )
   })
 })
+
+describe('rarities and passcode fixes (price files from 2026-11-10)', () => {
+  const idx = new PriceIndex({
+    date: '2026-11-09',
+    dbVersion: '1',
+    rarities: ['Super Rare', 'Common', 'Rare'],
+    cards: [
+      // TCGplayer names the cheapest listing "Gaia Knight, the Force of Earth (Super Rare)"; Mass Entry gets its id.
+      { id: 97204936, n: 'Gaia Knight, the Force of Earth', p: 1.13, r: [[0, 27600, 1.13], [1, 35370, 1.39], [2, 80572, 3]] },
+      // YGOPRODeck had these two passcodes swapped; `pw` is the real one.
+      { id: 74733322, pw: 48739627, n: 'Artmage Academic Arcane Arts Acropolis', p: 0.19 },
+      { id: 48739627, pw: 74733322, n: 'Theorealize', p: 0.16 },
+    ],
+  })
+
+  it('reads deck codes with the real passcodes and keeps YGOPRODeck lookups for Fuwa Lab', () => {
+    expect(idx.card(74733322)?.n).toBe('Theorealize')
+    expect(idx.card(48739627)?.n).toBe('Artmage Academic Arcane Arts Acropolis')
+    expect(idx.byYgoprodeckId(48739627)?.n).toBe('Theorealize')
+    const p = priceDeck(parseDeck('#main\n74733322\n', idx), idx)
+    expect(p.lines.map((l) => l.name)).toEqual(['Theorealize'])
+  })
+
+  it('prices the cheapest rarity by default and sends its product id', () => {
+    const p = priceDeck({ main: [97204936, 97204936], extra: [], side: [] }, idx)
+    expect(p.needTotal).toBeCloseTo(2.26)
+    expect(shoppingList(p)).toEqual([{ name: 'Gaia Knight, the Force of Earth', qty: 2, productId: 27600 }])
+    expect(massEntryUrl(shoppingList(p))).toBe('https://www.tcgplayer.com/massentry?productline=YuGiOh&c=2-27600')
+  })
+
+  it('uses a picked rarity, and falls back to the cheapest when it no longer exists', () => {
+    const p = priceDeck({ main: [97204936], extra: [], side: [] }, idx, {}, { 97204936: 'Rare' })
+    expect([p.needTotal, p.lines[0].picked, shoppingList(p)[0].productId]).toEqual([3, true, 80572])
+    const gone = priceDeck({ main: [97204936], extra: [], side: [] }, idx, {}, { 97204936: 'Ghost Rare' })
+    expect([gone.needTotal, gone.lines[0].picked]).toEqual([1.13, false])
+  })
+
+  it('mixes product-id and name lines in one Mass Entry link', () => {
+    expect(massEntryUrl([{ name: 'A', qty: 1, productId: 5 }, { name: 'No Product', qty: 2 }])).toBe(
+      'https://www.tcgplayer.com/massentry?productline=YuGiOh&c=1-5||2%20No%20Product',
+    )
+  })
+})

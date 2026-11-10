@@ -1,13 +1,14 @@
 // Everything Cost Down keeps lives in the extension's storage.local (this browser only; no account):
 //   prices  the downloaded price file and when it was fetched (refreshed by the background script, at most daily)
 //   owned   copies you own, by passcode; they apply to every deck
+//   rarity  the rarity picked per card (by passcode), for every deck; cards not in it get their cheapest rarity
 //   order   the order list: decks to buy together in one Mass Entry
 //   panelHidden  the popup's "Keep the panel hidden until I open it" switch
 //   panelPos     where the user dragged the on-page panel, per site
 //   reopenPos    where the user dragged the round reopen button, per site
 
 import type { RawDeck } from './deck.ts'
-import { PriceIndex, type Owned, type PriceFile } from './prices.ts'
+import { PriceIndex, type Owned, type PriceFile, type RarityChoice } from './prices.ts'
 
 export interface StoredPrices {
   fetchedAt: number
@@ -43,6 +44,18 @@ export async function setOwnedCounts(counts: Record<number, number>): Promise<vo
     else delete owned[Number(id)]
   }
   await chrome.storage.local.set({ owned })
+}
+
+export async function getRarityChoice(): Promise<RarityChoice> {
+  return ((await chrome.storage.local.get('rarity')).rarity as RarityChoice | undefined) ?? {}
+}
+
+/** Picks a rarity for a card in every deck; undefined goes back to the cheapest. */
+export async function setRarity(id: number, rarity: string | undefined): Promise<void> {
+  const choice = await getRarityChoice()
+  if (rarity) choice[id] = rarity
+  else delete choice[id]
+  await chrome.storage.local.set({ rarity: choice })
 }
 
 export async function getOrder(): Promise<OrderDeck[]> {

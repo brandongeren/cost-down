@@ -3,8 +3,18 @@
 
 import { SECTION_LABEL, SECTIONS, deckSize, type RawDeck } from '../core/deck.ts'
 import { massEntryUrl } from '../core/massentry.ts'
-import { money, priceDeck, shoppingList, type Owned, type PricedDeck, type PriceIndex } from '../core/prices.ts'
-import { addToOrder, getOrder, getOwned, onStoreChange, setOwnedCount, setOwnedCounts, type OrderDeck } from '../core/store.ts'
+import { money, priceDeck, shoppingList, type Owned, type PricedDeck, type PricedLine, type PriceIndex, type RarityChoice } from '../core/prices.ts'
+import {
+  addToOrder,
+  getOrder,
+  getOwned,
+  getRarityChoice,
+  onStoreChange,
+  setOwnedCount,
+  setOwnedCounts,
+  setRarity,
+  type OrderDeck,
+} from '../core/store.ts'
 import { append, h, logo, openTab } from './dom.ts'
 
 export interface PanelDeck {
@@ -20,6 +30,7 @@ export class DeckPanel {
   private index?: PriceIndex
   private error?: string
   private owned: Owned = {}
+  private choice: RarityChoice = {}
   private order: OrderDeck[] = []
   private current?: PanelDeck
   private collapsed = false
@@ -37,7 +48,7 @@ export class DeckPanel {
   ) {
     this.collapsed = !!opts.startCollapsed
     onStoreChange((keys) => {
-      if (keys.includes('owned') || keys.includes('order')) void this.reload()
+      if (keys.includes('owned') || keys.includes('order') || keys.includes('rarity')) void this.reload()
     })
     void this.reload()
   }
@@ -54,7 +65,7 @@ export class DeckPanel {
   }
 
   private async reload() {
-    ;[this.owned, this.order] = await Promise.all([getOwned(), getOrder()])
+    ;[this.owned, this.order, this.choice] = await Promise.all([getOwned(), getOrder(), getRarityChoice()])
     this.render()
   }
 
@@ -85,7 +96,7 @@ export class DeckPanel {
       return
     }
 
-    const priced = priceDeck(current.deck, index, this.owned)
+    const priced = priceDeck(current.deck, index, this.owned, this.choice)
     const ownsSome = priced.needTotal !== priced.fullTotal
     append(
       header,
@@ -148,6 +159,7 @@ export class DeckPanel {
                 l.unit === undefined
                   ? h('span', { class: 'price none', title: 'No TCGplayer price' }, '—')
                   : h('span', { class: 'price', title: `${money(l.unit)} each` }, money(l.total)),
+                this.rarityControl(l, index),
               ),
             ),
           ),
@@ -187,7 +199,7 @@ export class DeckPanel {
         h(
           'div',
           { class: 'note' },
-          `TCGplayer market prices, cheapest printing${index.date ? `, ${index.date}` : ''}.` +
+          `TCGplayer market prices, cheapest rarity unless you pick one${index.date ? `, ${index.date}` : ''}.` +
             (priced.unpriced ? ` ${priced.unpriced} card(s) have no price.` : ''),
         ),
       ),
@@ -206,6 +218,25 @@ export class DeckPanel {
     this.collapsed = false
     this.opts.onExpand?.()
     this.render()
+  }
+
+  /** Which rarity to buy: "Cheapest" (the default) or one the card is sold in, each with its price. Shared by every deck. */
+  private rarityControl(l: PricedLine, index: PriceIndex) {
+    const opts = index.options(l.id)
+    if (!opts.length) return null
+    if (opts.length === 1) return h('span', { class: 'rarity', title: 'The only rarity on TCGplayer' }, opts[0].rarity)
+    const select = h(
+      'select',
+      {
+        class: `rarity${l.picked ? ' picked' : ''}`,
+        title: 'Which rarity to buy (for every deck). Mass Entry gets the cheapest listing of it.',
+        onchange: (e: Event) => void setRarity(l.id, (e.target as HTMLSelectElement).value || undefined),
+      },
+      h('option', { value: '' }, `Cheapest: ${opts[0].rarity} (${money(opts[0].price)})`),
+      ...opts.map((o) => h('option', { value: o.rarity }, `${o.rarity} (${money(o.price)})`)),
+    ) as HTMLSelectElement
+    select.value = l.picked && l.option ? l.option.rarity : ''
+    return select
   }
 
   /** own None − n + All: copies you own (for every deck); None = 0, All = every copy of this card in this deck. */
