@@ -1,4 +1,4 @@
-COST DOWN - HOW TO SUBMIT TO THE CHROME WEB STORE (version 0.1.1)
+COST DOWN - HOW TO SUBMIT TO THE CHROME WEB STORE (version 0.1.2)
 
 Thanks for helping! Everything you need is in this folder. Unzip this bundle first, but NOT the
 extension zip inside it: Chrome wants that one uploaded as it is.
@@ -8,7 +8,7 @@ WHICH FILE GOES WHERE
 
   File                              Where it goes in the developer dashboard
   --------------------------------  ---------------------------------------------------------------
-  cost-down-chrome-0.1.1.zip        "+ New item" upload (or Package tab -> "Upload new package")
+  cost-down-chrome-0.1.2.zip        "+ New item" upload (or Package tab -> "Upload new package")
   LISTING.md                        Text to copy: the description (Store listing tab) and the
                                     Privacy tab answers
   store-icon-128.png                Store listing tab -> Graphic assets -> "Store icon"
@@ -23,7 +23,7 @@ STEPS
 
 1. Go to https://chrome.google.com/webstore/devconsole and sign in to the developer account.
 
-2. Click "+ New item" and upload cost-down-chrome-0.1.1.zip.
+2. Click "+ New item" and upload cost-down-chrome-0.1.2.zip.
    The name and the one-line summary are taken from the package, so you don't type those.
 
 3. STORE LISTING tab

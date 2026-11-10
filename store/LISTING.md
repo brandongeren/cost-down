@@ -15,13 +15,15 @@ Pokémon.
 • The deck's price appears right next to the builder's card counts, and every card shows its price.
 • Mark the copies you already own: the total drops to what you still need to buy, and your owned counts carry over
   to every deck.
-• One click opens TCGplayer Mass Entry with exactly the cards you still need.
+• Pick the rarity you want for any card (Quarter Century Secret Rare, Starlight Rare, ...), or leave it on the
+  cheapest. The price follows your pick, and it's remembered for every deck.
+• One click opens TCGplayer Mass Entry with exactly the cards you still need, as the exact TCGplayer products.
 • Multi-deck order list: add several decks and buy them all in one Mass Entry (cards you own count once for the whole order).
 • Works on Yu-Gi-Oh! Neuron / the Konami card database (deck pages and the deck editor), Duelingbook's deck
   constructor and Fuwa Lab, and with any ydke:// code, .ydk file or text list pasted into the toolbar popup.
 • On the Neuron deck editor, paste a ydke:// code to fill the whole deck; you check it and press Save yourself.
 
-Prices are TCGplayer market prices (USD) for each card's cheapest printing, updated daily from TCGCSV by way of the
+Prices are TCGplayer market prices (USD), per rarity, updated daily from TCGCSV by way of the
 free Chaos Catalog project. Cost Down collects no data: no accounts, no tracking, nothing uploaded.
 
 Not affiliated with Konami, TCGplayer, Duelingbook or Fuwa Lab. Yu-Gi-Oh! is a trademark of Konami.

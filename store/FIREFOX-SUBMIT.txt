@@ -1,0 +1,43 @@
+COST DOWN - HOW TO SUBMIT A NEW VERSION TO FIREFOX ADD-ONS (version 0.1.2)
+
+Cost Down is already listed on Firefox Add-ons (addons.mozilla.org, "AMO"; add-on name "cost-down"), so this
+is a new version of it, not a new add-on. Unzip this bundle first, but NOT the two zips inside it: Mozilla wants
+those uploaded as they are.
+
+
+WHICH FILE GOES WHERE
+
+  File                              Where it goes on the developer hub
+  --------------------------------  ---------------------------------------------------------------
+  cost-down-firefox-0.1.2.zip       "Upload a New Version" -> the add-on file
+  cost-down-source-0.1.2.zip        Same flow, "Do you need to submit source code?" -> Yes -> upload it
+  NOTES FOR REVIEWERS.txt           Text to paste into "Notes to Reviewer"
+  LISTING.md                        Updated description (optional: paste it on the listing page)
+
+The screenshots and icon are already on the listing; nothing to upload for them.
+
+
+STEPS
+
+1. Open https://addons.mozilla.org/en-US/developers/addon/cost-down/versions/submit/
+   (or: My Add-ons -> Cost Down -> "Upload New Version").
+
+2. Upload cost-down-firefox-0.1.2.zip. Leave "Firefox" ticked (not Android). Wait for the automatic checks
+   (a minute or so); a warning about Firefox for Android is expected and fine. Click Continue.
+
+3. "Do you need to submit source code?": choose Yes and upload cost-down-source-0.1.2.zip. (The add-on's
+   code is bundled with esbuild, so Mozilla's reviewers ask for the source.) Click Continue.
+
+4. Describe the version:
+   - Release notes: "Pick a rarity for each card; Mass Entry now adds the exact TCGplayer products (fixes cards
+     whose cheapest listing has the rarity in its name, e.g. Rarity Collection); corrects two cards whose passcodes
+     were swapped in the card data; on-page totals hide with the panel; the round button can be dragged."
+   - Notes to Reviewer: paste NOTES FOR REVIEWERS.txt.
+   - License: MIT (already set).
+   Click "Submit Version".
+
+5. Mozilla reviews it (hours to a few days) and emails the account. Earlier versions still waiting for review
+   don't block this one.
+
+6. Optional: update the listing text. My Add-ons -> Cost Down -> Edit Product Page -> Describe Add-on -> Edit,
+   paste the "Description" section of LISTING.md, Save Changes.

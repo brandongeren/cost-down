@@ -314,6 +314,11 @@ big combined order.
 
 ## 8. Still open
 
+- **2026-11-10: release 0.1.2** (rarity picker, product-id Mass Entry, corrected passcodes): Firefox and Chrome
+  bundles in `~/Downloads` (`cost-down-firefox-0.1.2-submit.zip`, `cost-down-chrome-web-store-0.1.2.zip`), each with
+  its `HOW TO SUBMIT.txt` (`store/FIREFOX-SUBMIT.txt`, `store/CHROME-SUBMIT.txt`). The store screenshots predate the
+  rarity menu. Chaos Catalog's per-rarity data went live 2026-11-10 (push 08a7e77); its passcode fixes arrive with the
+  first daily run after that (the weekly Yugipedia fetch only runs on daily/manual runs).
 - **2026-11-09: Firefox 0.1.1 submitted too** (on-page totals hide with the panel, draggable reopen button), and a
   Chrome Web Store bundle for 0.1.1 made (`~/Downloads/cost-down-chrome-web-store-0.1.1.zip`); its instructions
   (`HOW TO SUBMIT.txt`: which file goes where in the dashboard, then the steps) are `store/CHROME-SUBMIT.txt`.
