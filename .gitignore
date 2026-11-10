@@ -4,3 +4,4 @@ dist/
 *.xpi
 .amo-credentials.json
 .web-extension-id
+.DS_Store
